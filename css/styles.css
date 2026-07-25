@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+
+:root {
+  --neon-green: #00FF00;
+  --dark-bg: #050505;
+  --panel-bg: #0a0a0a;
+  --border-glow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+body {
+  background-color: var(--dark-bg);
+  color: var(--neon-green);
+  font-family: 'Fira Code', monospace;
+  overflow-x: hidden;
+}
+
+/* Efectos Hacker Clandestino */
+.neon-border {
+  border: 1px solid var(--neon-green);
+  box-shadow: var(--border-glow);
+}
+
+.neon-text {
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
+.btn-neon {
+  background-color: transparent;
+  border: 1px solid var(--neon-green);
+  color: var(--neon-green);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-neon:hover {
+  background-color: var(--neon-green);
+  color: var(--dark-bg);
+  box-shadow: 0 0 15px var(--neon-green);
+}
+
+.btn-neon.active {
+  background-color: var(--neon-green);
+  color: var(--dark-bg);
+  box-shadow: 0 0 15px var(--neon-green);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(5px);
+}
+
+/* Placeholder de Anuncios */
+.ad-placeholder {
+  background-color: #111;
+  border: 1px dashed var(--neon-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #006600;
+  font-size: 0.8rem;
+  text-align: center;
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LibreQR Studios | Generador Gratuito y Privado</title>
+  <meta name="description" content="Crea códigos QR gratuitos al instante. Sin registros, máxima privacidad. Descarga en PNG, JPG o PDF. Impulsado por CyberEnterados.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Script de AdSense (Reemplazar con ID real al aprobar) -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+</head>
+<body class="min-h-screen flex flex-col items-center p-4">
+
+  <!-- BANNER 1: TOP / HEADER (AdSense) -->
+  <div class="ad-placeholder w-full max-w-3xl h-[50px] md:h-[90px] mb-6 neon-border">
+    [ ESPACIO PUBLICITARIO 1 - HEADER ]
+  </div>
+
+  <header class="text-center mb-8">
+    <h1 class="text-3xl md:text-5xl font-bold neon-text mb-2">LibreQR Studios</h1>
+    <p class="text-sm md:text-base opacity-80">Generador Clandestino de Alta Velocidad</p>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL: 1 Columna en móvil, 2 en PC -->
+  <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- BANNER 2: SIDEBAR IZQ O MIDDLE EN MÓVIL -->
+    <div class="ad-placeholder w-full h-[250px] lg:h-[600px] neon-border order-2 lg:order-1">
+      [ ESPACIO PUBLICITARIO 2 - SIDEBAR/MIDDLE ]
+    </div>
+
+    <!-- PANEL CENTRAL: GENERADOR -->
+    <section class="col-span-1 lg:col-span-2 p-6 panel-bg neon-border flex flex-col gap-6 order-1 lg:order-2">
+      
+      <!-- Selector de Tipo -->
+      <div>
+        <h2 class="text-xl mb-4 font-bold border-b border-[#00FF00] pb-2">>_ SELECCIONA EL FORMATO</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="type-selector">
+          <button class="btn-neon active py-2 rounded" data-type="url">🌐 Enlace</button>
+          <button class="btn-neon py-2 rounded" data-type="wifi">📶 Wi-Fi</button>
+          <button class="btn-neon py-2 rounded" data-type="whatsapp">💬 WhatsApp</button>
+          <button class="btn-neon py-2 rounded" data-type="text">📄 Texto</button>
+        </div>
+      </div>
+
+      <!-- Área de Input Dinámica -->
+      <div id="input-area">
+        <label class="block text-sm mb-2">>_ INGRESA LOS DATOS</label>
+        <input type="url" id="qr-input" placeholder="https://www.cyberenterados.com" class="w-full p-4 bg-black border border-[#00FF00] text-[#00FF00] focus:outline-none focus:ring-2 focus:ring-[#00FF00] rounded font-mono">
+      </div>
+
+      <!-- Botón de Generación -->
+      <button id="btn-generate" class="w-full btn-neon font-bold text-lg md:text-xl py-4 rounded animate-pulse hover:animate-none">
+        ⚡ GENERAR CÓDIGO QR ⚡
+      </button>
+
+      <!-- SECCIÓN DE TEXTO SEO INVISIBLE EN UI PERO VISIBLE PARA BOTS -->
+      <article class="mt-8 text-xs opacity-60">
+        <h3 class="text-lg font-bold text-[#00FF00]">¿Cómo funciona LibreQR Studios?</h3>
+        <p>Generar un código QR nunca fue tan fácil. Nuestra herramienta no requiere registro, es 100% gratuita y te permite exportar en formato PNG, JPG y PDF. Ideal para menús de restaurantes, acceso Wi-Fi y marketing digital en Buenos Aires y el mundo. Protegemos tu privacidad al no guardar datos personales.</p>
+      </article>
+
+    </section>
+
+  </main>
+
+  <!-- BANNER 3: PRE-FEEDBACK (AdSense) -->
+  <div class="ad-placeholder w-full max-w-3xl h-[250px] mt-8 neon-border">
+    [ ESPACIO PUBLICITARIO 3 - BOTTOM FEEDBACK ]
+  </div>
+
+  <!-- BANNER 4: FOOTER BANNER / APOYO -->
+  <footer class="w-full max-w-3xl mt-12 p-4 text-center border-t border-[#00FF00]">
+    <p class="mb-4">Impulsado por <span class="neon-text font-bold">CyberEnterados</span></p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="#" class="btn-neon px-4 py-2 text-sm rounded">☕ Cafecito / Mercado Pago</a>
+      <a href="#" class="btn-neon px-4 py-2 text-sm rounded">🪙 Donar Crypto</a>
+    </div>
+    <div class="mt-6 text-xs flex justify-center gap-4 opacity-70">
+      <a href="/privacidad" class="hover:text-white">Privacidad</a>
+      <a href="/terminos" class="hover:text-white">Términos</a>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- MODALES DE OPERACIÓN CLANDESTINA           -->
+  <!-- ========================================== -->
+
+  <!-- MODAL 1: ANUNCIO INTERSTITIAL Y DESCARGA -->
+  <div id="modal-ad" class="fixed inset-0 z-50 modal-overlay hidden flex flex-col items-center justify-center p-4">
+    <div class="bg-black border border-[#00FF00] p-8 max-w-lg w-full text-center neon-border rounded">
+      
+      <!-- Zona de Anuncio Simulado -->
+      <div id="ad-zone" class="mb-6">
+        <h3 class="text-xl font-bold mb-2 blink">>_ PROCESANDO QR</h3>
+        <p class="text-sm mb-4">Verás un breve anuncio que nos ayuda a financiar el proyecto.</p>
+        <div class="ad-placeholder w-full h-[200px] mb-4">
+          [ VIDEO AD / BANNER CARGANDO... ]
+        </div>
+        <p class="text-2xl font-bold font-mono neon-text" id="ad-countdown">05</p>
+      </div>
+
+      <!-- Zona de Descarga (Aparece tras el anuncio) -->
+      <div id="download-zone" class="hidden">
+        <h3 class="text-2xl font-bold text-[#00FF00] mb-4">¡CÓDIGO LISTO!</h3>
+        <div class="bg-white p-4 inline-block mb-6 rounded">
+          <!-- Aquí irá el QR generado en Canvas -->
+          <div id="qr-preview" class="w-[200px] h-[200px] border border-gray-300"></div>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="btn-neon py-2 text-sm rounded font-bold" onclick="triggerDownload('png')">🖼️ PNG</button>
+          <button class="btn-neon py-2 text-sm rounded font-bold" onclick="triggerDownload('jpg')">📷 JPG</button>
+          <button class="btn-neon py-2 text-sm rounded font-bold" onclick="triggerDownload('pdf')">📄 PDF</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL 2: FEEDBACK POST-DESCARGA -->
+  <div id="modal-feedback" class="fixed inset-0 z-50 modal-overlay hidden flex flex-col items-center justify-center p-4">
+    <div class="bg-black border border-[#00FF00] p-6 max-w-md w-full neon-border rounded text-center">
+      <h3 class="text-xl font-bold text-[#00FF00] mb-2">TELEMETRÍA DE SATISFACCIÓN</h3>
+      <p class="text-sm mb-6">Selecciona tu nivel de satisfacción. Anónimo y seguro.</p>
+      
+      <!-- Selector de Emojis -->
+      <div class="flex justify-between mb-6 text-2xl cursor-pointer" id="emoji-picker">
+        <span class="hover:scale-125 transition-transform" data-val="1">🤬</span>
+        <span class="hover:scale-125 transition-transform" data-val="2">🙁</span>
+        <span class="hover:scale-125 transition-transform" data-val="3">😐</span>
+        <span class="hover:scale-125 transition-transform" data-val="4">😊</span>
+        <span class="hover:scale-125 transition-transform scale-125 ring-2 ring-[#00FF00] rounded-full" data-val="5">🚀</span>
+      </div>
+
+      <!-- Caja de Comentario -->
+      <textarea id="feedback-text" maxlength="140" rows="3" class="w-full p-2 bg-black border border-[#00FF00] text-[#00FF00] focus:outline-none mb-2 font-mono text-sm" placeholder="(Opcional) Deja un comentario táctico..."></textarea>
+      <div class="text-right text-xs mb-4"><span id="char-count">0</span> / 140</div>
+
+      <!-- Botones de Acción -->
+      <div class="flex flex-col gap-2">
+        <button id="btn-send-feedback" class="btn-neon py-2 w-full font-bold rounded bg-[#002200]">ENVIAR FEEDBACK</button>
+        <button id="btn-close-feedback" class="text-gray-400 text-sm hover:text-white mt-2">✖ Cerrar (🚀)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+</body>
+</html>
