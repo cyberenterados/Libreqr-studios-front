@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputArea = document.getElementById('input-area');
   const typeButtons = document.querySelectorAll('#type-selector button');
   
+  // === ENLACE DE COMUNICACIÓN CON EL BÚNKER (API) ===
+  // Cambie localhost por su enlace de Render cuando pase a producción
+  const API_BASE_URL = 'http://localhost:5000/api';
+  
   // === INICIALIZAR FORMULARIO POR DEFECTO ===
   renderFormInputs('url');
 
@@ -68,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!val) { alert('⛔ Búnker informa: El texto está vacío.'); return null; }
       if (detectSpamFrontend(val)) {
         alert('⚠️ [ALERTA DE SEGURIDAD]: Detectamos un enlace o correo. Por favor, usa el formato correspondiente o retíralo.');
-        // No bloqueamos por completo para dejar que el Backend evalúe y guarde el flag, pero avisamos al usuario.
       }
       return val;
     }
@@ -103,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Mostrar anuncio interstitial
     modalAd.classList.remove('hidden');
     adZone.classList.remove('hidden');
-    if (downloadZone) downloadZone.classList.add('hidden'); // Solo por si acaso quedó del HTML anterior
+    if (downloadZone) downloadZone.classList.add('hidden');
 
     let seconds = 3; // Tiempo rápido para pruebas, en prod poner 5 o 10
     adCountdown.textContent = `0${seconds}`;
@@ -227,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     qrEngine.download({
       name: `LibreQR_${Date.now()}`,
-      extension: extension // "png" o "jpeg" (libreria usa jpeg)
+      extension: extension // "png" o "jpeg"
     }).then(() => {
       // Restaurar tamaño visual para que no se rompa la web
       qrEngine.update({ width: 250, height: 250 });
@@ -243,12 +246,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // === FLUJO DEL MODAL DE FEEDBACK (Votar y Cerrar) ===
   const emojiBtns = document.querySelectorAll('#emoji-picker span');
   const btnCloseFeedback = document.getElementById('btn-close-feedback');
-  let selectedRating = 5;
+  let selectedRating = 5; // Default 5 stars
 
   emojiBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      emojiBtns.forEach(b => b.classList.remove('scale-125', 'ring-2', 'ring-[#00FF00]', 'rounded-full'));
-      btn.classList.add('scale-125', 'ring-2', 'ring-[#00FF00]', 'rounded-full');
+      emojiBtns.forEach(b => b.classList.remove('scale-125', 'ring-2', 'ring-[#00FF00]', 'rounded-full', 'grayscale-0'));
+      emojiBtns.forEach(b => b.classList.add('grayscale'));
+      
+      btn.classList.remove('grayscale');
+      btn.classList.add('scale-125', 'ring-2', 'ring-[#00FF00]', 'rounded-full', 'grayscale-0');
+      
       selectedRating = btn.dataset.val;
       btnCloseFeedback.innerHTML = `✖ Cerrar (${btn.innerHTML})`;
     });
@@ -257,15 +264,83 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-send-feedback').addEventListener('click', submitFeedback);
   btnCloseFeedback.addEventListener('click', submitFeedback);
 
-  function submitFeedback() {
+  // === (NUEVO) ENVÍO DE TELEMETRÍA AL BACKEND ===
+  async function submitFeedback() {
     const comment = document.getElementById('feedback-text').value.trim();
-    // Aquí iría el fetch() hacia Render. Por ahora lo cerramos y reiniciamos.
-    console.log("Telemetría enviada:", { rating: selectedRating, comment: comment });
+    const btnSend = document.getElementById('btn-send-feedback');
     
+    // Desactivar botón para evitar doble envío (Anti-Spam de interfaz)
+    btnSend.disabled = true;
+    btnSend.innerHTML = "ENVIANDO DATOS...";
+
+    // Generar un Token de Descarga Único para esta sesión
+    const downloadToken = `QR_SESSION_${Date.now().toString(36)}_${Math.random().toString(36).substr(2)}`;
+
+    const payload = {
+      rating: selectedRating,
+      comment: comment,
+      downloadToken: downloadToken
+    };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log("🟢 [TELEMETRÍA] Datos cifrados y guardados en la base principal.");
+      } else {
+        console.warn("⚠️ [ALERTA DE BÚNKER] Mensaje del servidor:", data.message);
+      }
+    } catch (error) {
+      console.error("🔴 [FALLA DE ENLACE] No se pudo contactar al servidor:", error);
+    }
+    
+    // Cerrar modal y reiniciar
     document.getElementById('modal-feedback').classList.add('hidden');
-    
-    // Opcional: Recargar la página o volver a la fase 1 limpiando el entorno
-    alert("¡Búnker agradece tu telemetría! El QR está en tu dispositivo.");
+    alert("¡Búnker agradece su telemetría! El QR está asegurado en su dispositivo.");
     location.reload(); 
   }
+
+  // === (NUEVO) CARGAR TELEMETRÍA PÚBLICA EN EL FOOTER ===
+  async function loadPublicFeedback() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/feedback/public`);
+      const data = await response.json();
+
+      if (data.success && data.reviews.length > 0) {
+        const ticker = document.getElementById('feedback-ticker');
+        if (ticker) {
+          ticker.innerHTML = ''; // Limpiar textos falsos de prueba
+
+          data.reviews.forEach(review => {
+            // Asignar emoji según el rating
+            const emojis = ['🤬', '🙁', '😐', '😊', '🚀'];
+            const ratingEmoji = emojis[review.rating - 1] || '🚀';
+            
+            // Formatear hora de la operación (Hora de Buenos Aires)
+            const dateObj = new Date(review.createdAt);
+            const timeString = dateObj.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+
+            const reviewHTML = `
+              <div class="border-l-2 border-[#00FF00] pl-3 py-2 bg-[#0a0a0a] mb-2 rounded shadow-[0_0_5px_rgba(0,255,0,0.1)]">
+                <p class="text-[10px] opacity-60 mb-1">Telemetría de las ${timeString} | Nivel: ${ratingEmoji}</p>
+                <p class="text-xs text-gray-300">"${review.comment || 'Operación silenciosa. Sin reporte de texto.'}"</p>
+              </div>
+            `;
+            ticker.innerHTML += reviewHTML;
+          });
+        }
+      }
+    } catch (error) {
+      console.error("🔴 [RADAR OFFLINE] No se pudieron cargar las opiniones de la comunidad.");
+    }
+  }
+
+  // Ejecutar el radar al iniciar la web
+  loadPublicFeedback();
 });
