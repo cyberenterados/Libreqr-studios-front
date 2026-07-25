@@ -1,10 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 
 :root {
+  /* ========================================== */
+  /* 🟢 VARIABLES BASE DEL BÚNKER (VERDE NEÓN) */
+  /* ========================================== */
   --neon-green: #00FF00;
   --dark-bg: #050505;
   --panel-bg: #0a0a0a;
   --border-glow: 0 0 10px rgba(0, 255, 0, 0.5);
+
+  /* ========================================== */
+  /* ⚡ ENERGÍA DE LA IA (FONDO DINÁMICO)       */
+  /* ¡COMANDANTE: MODIFIQUE ESTOS VALORES A GUSTO! */
+  /* ========================================== */
+  --energy-color: #00FFFF;       /* Cyan Eléctrico (Puede usar #0088FF para azul más profundo) */
+  --energy-opacity: 0.08;        /* Opacidad sutil (0.05 a 0.2 máximo para no encandilar) */
+  --energy-speed: 12s;           /* Tiempo que tarda el escáner de datos en dar la vuelta */
+  --grid-color: rgba(0, 255, 0, 0.03); /* Cuadrícula cibernética de fondo (verde ultra opaco) */
 }
 
 body {
@@ -12,9 +24,57 @@ body {
   color: var(--neon-green);
   font-family: 'Fira Code', monospace;
   overflow-x: hidden;
+  position: relative;
+  z-index: 0;
 }
 
-/* Efectos Hacker Clandestino */
+/* ========================================== */
+/* 🌐 1. LA CUADRÍCULA CIBERNÉTICA ESTÁTICA   */
+/* ========================================== */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  /* Dibuja un grid estilo Matrix/Placa Base */
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: -2;
+  pointer-events: none; /* Evita que bloquee clics */
+}
+
+/* ========================================== */
+/* ⚡ 2. EL FLUJO DE ENERGÍA CYAN (ANIMACIÓN) */
+/* ========================================== */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  /* Crea un haz de luz vertical (scanline) de energía */
+  background: linear-gradient(
+    180deg, 
+    transparent 0%, 
+    var(--energy-color) 50%, 
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  opacity: var(--energy-opacity);
+  z-index: -1;
+  /* Aplica la animación definida abajo */
+  animation: dataStream var(--energy-speed) linear infinite;
+  pointer-events: none;
+}
+
+/* Motor de Animación CSS (Bajo Consumo de GPU) */
+@keyframes dataStream {
+  0% { background-position: 0% -100%; }
+  100% { background-position: 0% 200%; }
+}
+
+/* ========================================== */
+/* 🛠️ EFECTOS HACKER CLANDESTINOS             */
+/* ========================================== */
 .neon-border {
   border: 1px solid var(--neon-green);
   box-shadow: var(--border-glow);
@@ -34,30 +94,31 @@ body {
 
 .btn-neon:hover {
   background-color: var(--neon-green);
-  color: var(--dark-bg);
+  color: #000;
   box-shadow: 0 0 15px var(--neon-green);
 }
 
 .btn-neon.active {
   background-color: var(--neon-green);
-  color: var(--dark-bg);
+  color: #000;
   box-shadow: 0 0 15px var(--neon-green);
 }
 
-/* Modal Overlay */
+/* ========================================== */
+/* 🎛️ UTILIDADES EXTRA (SCROLLBAR & MODALES)  */
+/* ========================================== */
+
+/* Modal Overlay con desenfoque de cristal */
 .modal-overlay {
   background-color: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(5px);
 }
 
-/* Placeholder de Anuncios */
-.ad-placeholder {
-  background-color: #111;
-  border: 1px dashed var(--neon-green);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #006600;
-  font-size: 0.8rem;
-  text-align: center;
+/* Ocultar barra de scroll en el panel de opiniones (Hemisferio Izquierdo) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

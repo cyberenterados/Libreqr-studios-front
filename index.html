@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LibreQR Studios | Generador Gratuito y Privado</title>
-  <meta name="description" content="Crea códigos QR gratuitos al instante. Sin registros, máxima privacidad. Descarga en PNG, JPG o PDF. Impulsado por CyberEnterados.">
-  
+  <meta name="description" content="Crea códigos QR gratuitos al instante. Sin registros, máxima privacidad. Descargas en Alta Resolución. Impulsado por CyberEnterados.">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,134 +12,211 @@
 
   <!-- Script de AdSense (Reemplazar con ID real al aprobar) -->
   <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  
   <!-- Motor de Renderizado QR Avanzado -->
-<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 
 </head>
-<body class="min-h-screen flex flex-col items-center p-4">
+<body class="min-h-screen flex flex-col items-center bg-[#050505] text-[#00FF00] font-mono overflow-x-hidden p-4">
 
-  <!-- BANNER 1: TOP / HEADER (AdSense) -->
-  <div class="ad-placeholder w-full max-w-3xl h-[50px] md:h-[90px] mb-6 neon-border">
-    [ ESPACIO PUBLICITARIO 1 - HEADER ]
+  <!-- ========================================== -->
+  <!-- 📢 BANNER 1: TOP / HEADER (ARRIBA)           -->
+  <!-- ========================================== -->
+  <div class="w-full max-w-[1200px] h-[90px] mb-6 flex items-center justify-center border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group">
+    <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
+    <span class="text-xs opacity-50 tracking-widest">[ AD_SERVER_NODE_TOP // ESPACIO PUBLICITARIO ]</span>
   </div>
 
-  <header class="text-center mb-8">
-    <h1 class="text-3xl md:text-5xl font-bold neon-text mb-2">LibreQR Studios</h1>
+  <header class="text-center mb-8 w-full">
+    <h1 class="text-4xl md:text-5xl font-bold neon-text mb-2 tracking-tighter">LibreQR Studios</h1>
     <p class="text-sm md:text-base opacity-80">Generador Clandestino de Alta Velocidad</p>
   </header>
 
-  <!-- CONTENEDOR PRINCIPAL: 1 Columna en móvil, 2 en PC -->
-  <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- ========================================== -->
+  <!-- NÚCLEO CENTRAL Y LATERALES (GRID 4 COLUMNAS) -->
+  <!-- ========================================== -->
+  <!-- En Móvil: 1 Columna (App -> Ad Izq -> Ad Der) | En PC: 4 Columnas (Ad Izq -> App [x2] -> Ad Der) -->
+  <main class="w-full max-w-[1400px] grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
     
-    <!-- BANNER 2: SIDEBAR (AdSense) -->
-    <div class="ad-placeholder w-full h-[250px] lg:h-[600px] neon-border order-2 lg:order-1 flex items-center justify-center text-xs text-green-800">
-      [ BANNER PUBLICITARIO ]
+    <!-- 📢 BANNER 2: SIDEBAR IZQUIERDA -->
+    <aside class="order-2 lg:order-1 col-span-1 min-h-[300px] lg:min-h-[600px] flex items-center justify-center border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group">
+      <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
+      <span class="text-xs opacity-50 tracking-widest text-center rotate-0 lg:-rotate-90">[ AD_SERVER_LEFT ]</span>
+    </aside>
+
+    <!-- ⚙️ PANEL CENTRAL: LA APLICACIÓN (Ocupa 2 columnas en PC) -->
+    <div class="order-1 lg:order-2 col-span-1 lg:col-span-2 flex flex-col gap-6">
+      
+      <!-- FASE 1: ENTRADA DE DATOS -->
+      <section id="input-zone" class="p-6 bg-[#0a0a0a] border border-[#00FF00] shadow-[0_0_10px_rgba(0,255,0,0.2)] rounded flex flex-col gap-6">
+        <div>
+          <h2 class="text-xl mb-4 font-bold border-b border-[#00FF00] pb-2">>_ 1. SELECCIONA EL FORMATO</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2" id="type-selector">
+            <button class="btn-neon bg-[#002200] active py-2 rounded text-sm transition-colors" data-type="url">🌐 Web</button>
+            <button class="btn-neon py-2 rounded text-sm transition-colors" data-type="wifi">📶 Wi-Fi</button>
+            <button class="btn-neon py-2 rounded text-sm transition-colors" data-type="vcard">🎴 vCard</button>
+            <button class="btn-neon py-2 rounded text-sm transition-colors" data-type="text">📄 Texto</button>
+            <button class="btn-neon py-2 rounded text-sm transition-colors" data-type="maps">📍 GPS</button>
+          </div>
+        </div>
+
+        <div id="input-area" class="min-h-[120px]">
+          <!-- JS inyectará el formulario aquí -->
+        </div>
+
+        <button id="btn-generate" class="w-full border border-[#00FF00] text-[#00FF00] font-bold text-xl py-4 rounded hover:bg-[#00FF00] hover:text-black transition-all shadow-[0_0_15px_rgba(0,255,0,0.4)]">
+          ⚡ GENERAR CÓDIGO QR ⚡
+        </button>
+      </section>
+
+      <!-- FASE 2: PANTALLA DE PERSONALIZACIÓN Y VISOR (Oculta inicialmente) -->
+      <section id="customization-zone" class="hidden p-6 bg-[#0a0a0a] border border-[#00FF00] shadow-[0_0_10px_rgba(0,255,0,0.2)] rounded flex flex-col md:flex-row gap-6">
+        
+        <!-- Controles de Diseño -->
+        <div class="flex-1 flex flex-col gap-6">
+          <h2 class="text-xl font-bold border-b border-[#00FF00] pb-2">>_ 2. ESTACIÓN DE DISEÑO</h2>
+          
+          <!-- Chips de Colores -->
+          <div>
+            <label class="block text-sm mb-2 opacity-80">🎨 Color Principal</label>
+            <div class="flex flex-wrap gap-3 items-center" id="color-chips">
+              <button class="color-chip rounded-full w-8 h-8 ring-2 ring-[#00FF00] transition-transform hover:scale-110" data-color="#000000" style="background-color: #000000;"></button>
+              <button class="color-chip rounded-full w-8 h-8 transition-transform hover:scale-110" data-color="#00FF00" style="background-color: #00FF00;"></button>
+              <button class="color-chip rounded-full w-8 h-8 transition-transform hover:scale-110" data-color="#0055FF" style="background-color: #0055FF;"></button>
+              <button class="color-chip rounded-full w-8 h-8 transition-transform hover:scale-110" data-color="#FF0055" style="background-color: #FF0055;"></button>
+              <!-- Selector libre camuflado -->
+              <div class="relative w-8 h-8 rounded-full overflow-hidden border border-[#00FF00] cursor-pointer hover:scale-110 transition-transform">
+                <input type="color" id="custom-color-picker" class="absolute -top-2 -left-2 w-16 h-16 cursor-pointer bg-transparent border-none" title="Elige otro color">
+              </div>
+            </div>
+          </div>
+
+          <!-- Formas -->
+          <div>
+            <label class="block text-sm mb-2 opacity-80">🧩 Estilo de Bloques</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button class="shape-btn border border-[#00FF00] bg-[#00FF00] text-black py-2 text-sm rounded font-bold transition-colors" data-shape="square">■ Cuad</button>
+              <button class="shape-btn border border-[#00FF00] text-[#00FF00] py-2 text-sm rounded transition-colors" data-shape="dots">● Puntos</button>
+              <button class="shape-btn border border-[#00FF00] text-[#00FF00] py-2 text-sm rounded transition-colors" data-shape="extra-rounded">🔲 Curvo</button>
+            </div>
+          </div>
+
+          <!-- Logo -->
+          <div>
+            <label class="block text-sm mb-2 opacity-80">🖼️ Logo Central (Máx 2MB)</label>
+            <input type="file" id="logo-upload" accept="image/png, image/jpeg, image/svg+xml" class="hidden">
+            <button onclick="document.getElementById('logo-upload').click()" class="border border-dashed border-[#00FF00] text-[#00FF00] py-2 px-4 text-sm rounded w-full hover:bg-[#002200] transition-colors">
+              📁 Subir tu Logo
+            </button>
+            <button id="btn-clear-logo" class="text-red-500 text-xs mt-2 hidden w-full text-center hover:text-red-400">✖ Quitar Logo</button>
+          </div>
+        </div>
+
+        <!-- Visor en Vivo y Resoluciones -->
+        <div class="flex-1 flex flex-col items-center justify-between border border-dashed border-[#00FF00] p-4 bg-[#030303] relative rounded">
+          <h3 class="absolute top-2 left-2 text-xs opacity-50 font-mono">👁️ LIVE_CANVAS</h3>
+          
+          <div id="qr-live-preview" class="bg-white p-2 rounded shadow-[0_0_15px_rgba(0,255,0,0.2)] mt-6">
+            <!-- El motor JS inyectará el Canvas aquí -->
+          </div>
+          
+          <div class="w-full mt-6">
+            <label class="block text-xs text-center mb-2 opacity-80">📐 SELECCIONA RESOLUCIÓN</label>
+            <select id="download-resolution" class="w-full p-2 bg-black border border-[#00FF00] text-[#00FF00] outline-none font-mono text-sm mb-4 rounded cursor-pointer">
+              <option value="500">Estándar (500x500 px)</option>
+              <option value="1000">Alta Definición HD (1000px)</option>
+              <option value="2000">Ultra 4K (2000x2000 px)</option>
+            </select>
+            
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-download-png" class="border border-[#00FF00] text-[#00FF00] font-bold py-3 text-sm bg-[#001100] hover:bg-[#00FF00] hover:text-black transition-colors rounded">🖼️ BAJAR PNG</button>
+              <button id="btn-download-jpg" class="border border-[#00FF00] text-[#00FF00] font-bold py-3 text-sm bg-[#001100] hover:bg-[#00FF00] hover:text-black transition-colors rounded">📷 BAJAR JPG</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
 
-    <!-- PANEL CENTRAL: ENTRADA DE DATOS (Fase 1) -->
-    <section id="input-zone" class="col-span-1 lg:col-span-2 p-6 panel-bg neon-border flex flex-col gap-6 order-1 lg:order-2">
-      <div>
-        <h2 class="text-xl mb-4 font-bold border-b border-[#00FF00] pb-2">>_ 1. SELECCIONA EL FORMATO</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 md:grid-cols-5 gap-2" id="type-selector">
-          <button class="btn-neon active py-2 rounded text-sm" data-type="url">🌐 Web</button>
-          <button class="btn-neon py-2 rounded text-sm" data-type="wifi">📶 Wi-Fi</button>
-          <button class="btn-neon py-2 rounded text-sm" data-type="vcard">🎴 vCard</button>
-          <button class="btn-neon py-2 rounded text-sm" data-type="text">📄 Texto</button>
-          <button class="btn-neon py-2 rounded text-sm" data-type="maps">📍 GPS</button>
-        </div>
-      </div>
+    <!-- 📢 BANNER 3: SIDEBAR DERECHA -->
+    <aside class="order-3 lg:order-3 col-span-1 min-h-[300px] lg:min-h-[600px] flex items-center justify-center border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group">
+      <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
+      <span class="text-xs opacity-50 tracking-widest text-center rotate-0 lg:-rotate-90">[ AD_SERVER_RIGHT ]</span>
+    </aside>
 
-      <div id="input-area">
-        <!-- JS inyectará el formulario aquí -->
-      </div>
-
-      <button id="btn-generate" class="w-full btn-neon font-bold text-xl py-4 rounded animate-pulse hover:animate-none bg-[#001100]">
-        ⚡ GENERAR CÓDIGO QR ⚡
-      </button>
-    </section>
-
-    <!-- PANTALLA DE PERSONALIZACIÓN Y VISOR (Fase 2 - Oculta inicialmente) -->
-    <section id="customization-zone" class="hidden col-span-1 lg:col-span-2 p-6 panel-bg neon-border flex flex-col md:flex-row gap-6 order-1 lg:order-2">
-      
-      <!-- Controles de Diseño -->
-      <div class="flex-1 flex flex-col gap-6">
-        <h2 class="text-xl font-bold border-b border-[#00FF00] pb-2">>_ 2. ESTACIÓN DE DISEÑO</h2>
-        
-        <!-- Chips de Colores -->
-        <div>
-          <label class="block text-sm mb-2 opacity-80">🎨 Color Principal</label>
-          <div class="flex flex-wrap gap-3 items-center" id="color-chips">
-            <button class="color-chip rounded-full w-8 h-8 ring-2 ring-[#00FF00]" data-color="#000000" style="background-color: #000000;"></button>
-            <button class="color-chip rounded-full w-8 h-8" data-color="#00FF00" style="background-color: #00FF00;"></button>
-            <button class="color-chip rounded-full w-8 h-8" data-color="#0055FF" style="background-color: #0055FF;"></button>
-            <button class="color-chip rounded-full w-8 h-8" data-color="#FF0055" style="background-color: #FF0055;"></button>
-            <!-- Selector libre -->
-            <input type="color" id="custom-color-picker" class="w-10 h-10 rounded cursor-pointer bg-transparent border border-[#00FF00]" title="Elige otro color">
-          </div>
-        </div>
-
-        <!-- Formas -->
-        <div>
-          <label class="block text-sm mb-2 opacity-80">🧩 Estilo de Bloques</label>
-          <div class="grid grid-cols-3 gap-2">
-            <button class="shape-btn btn-neon py-2 text-sm rounded bg-[#00FF00] text-black font-bold" data-shape="square">■ Cuadrado</button>
-            <button class="shape-btn btn-neon py-2 text-sm rounded" data-shape="dots">● Puntos</button>
-            <button class="shape-btn btn-neon py-2 text-sm rounded" data-shape="extra-rounded">🔲 Curvo</button>
-          </div>
-        </div>
-
-        <!-- Logo -->
-        <div>
-          <label class="block text-sm mb-2 opacity-80">🖼️ Logo Central (Máx 2MB)</label>
-          <input type="file" id="logo-upload" accept="image/png, image/jpeg, image/svg+xml" class="hidden">
-          <button onclick="document.getElementById('logo-upload').click()" class="btn-neon py-2 px-4 text-sm rounded w-full border-dashed">
-            📁 Subir tu Logo
-          </button>
-          <button id="btn-clear-logo" class="text-red-500 text-xs mt-2 hidden w-full text-center">✖ Quitar Logo</button>
-        </div>
-      </div>
-
-      <!-- Visor en Vivo y Resoluciones -->
-      <div class="flex-1 flex flex-col items-center justify-between border border-dashed border-[#00FF00] p-4 bg-[#050505] relative rounded">
-        <h3 class="absolute top-2 left-2 text-xs opacity-50 font-mono">👁️ LIVE_CANVAS</h3>
-        
-        <div id="qr-live-preview" class="bg-white p-2 rounded shadow-[0_0_15px_rgba(0,255,0,0.2)] mt-6">
-          <!-- El motor JS inyectará el Canvas aquí -->
-        </div>
-        
-        <div class="w-full mt-6">
-          <label class="block text-xs text-center mb-2 opacity-80">📐 SELECCIONA RESOLUCIÓN</label>
-          <select id="download-resolution" class="w-full p-2 bg-black border border-[#00FF00] text-[#00FF00] font-mono text-sm mb-4 rounded cursor-pointer">
-            <option value="500">Estándar (500x500 px)</option>
-            <option value="1000">Alta Definición HD (1000x1000 px)</option>
-            <option value="2000">Ultra 4K (2000x2000 px)</option>
-          </select>
-          
-          <div class="grid grid-cols-2 gap-2">
-            <button id="btn-download-png" class="btn-neon font-bold py-3 text-sm bg-[#003300] rounded">🖼️ BAJAR PNG</button>
-            <button id="btn-download-jpg" class="btn-neon font-bold py-3 text-sm bg-[#003300] rounded">📷 BAJAR JPG</button>
-          </div>
-        </div>
-      </div>
-
-    </section>
   </main>
 
-  <!-- BANNER 3: PRE-FEEDBACK (AdSense) -->
-  <div class="ad-placeholder w-full max-w-3xl h-[250px] mt-8 neon-border">
-    [ ESPACIO PUBLICITARIO 3 - BOTTOM FEEDBACK ]
+  <!-- ========================================== -->
+  <!-- 📢 BANNER 4: BOTTOM / ABAJO DEL NÚCLEO       -->
+  <!-- ========================================== -->
+  <div class="w-full max-w-[1200px] h-[90px] mt-4 mb-8 flex items-center justify-center border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group">
+    <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
+    <span class="text-xs opacity-50 tracking-widest">[ AD_SERVER_NODE_BOTTOM ]</span>
   </div>
 
-  <!-- BANNER 4: FOOTER BANNER / APOYO -->
-  <footer class="w-full max-w-3xl mt-12 p-4 text-center border-t border-[#00FF00]">
-    <p class="mb-4">Impulsado por <span class="neon-text font-bold">CyberEnterados</span></p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <a href="#" class="btn-neon px-4 py-2 text-sm rounded">☕ Cafecito / Mercado Pago</a>
-      <a href="#" class="btn-neon px-4 py-2 text-sm rounded">🪙 Donar Crypto</a>
+  <!-- ========================================== -->
+  <!-- TEXTO SEO INVISIBLE EN UI (Bot-Proof)      -->
+  <!-- ========================================== -->
+  <article class="w-full max-w-[1200px] p-4 text-[10px] opacity-30 font-mono text-justify mb-8">
+    <h3 class="font-bold mb-1">TELEMETRÍA: LibreQR Studios Generador Profesional</h3>
+    <p>El generador de códigos QR definitivo y 100% gratuito. Sin registros, con máxima privacidad. Exporte sus datos en formatos de alta resolución (Estándar, HD y Ultra 4K) en archivos PNG o JPG. Diseñado para optimizar cartas de restaurantes, configuraciones de red Wi-Fi automáticas, vCards de contacto y geolocalización GPS. Sistema cifrado sin historiales. Impulsado desde la base de operaciones en Buenos Aires, Argentina por el equipo de CyberEnterados.</p>
+  </article>
+
+  <!-- ========================================== -->
+  <!-- BÚNKER FOOTER: 2 HEMISFERIOS TÁCTICOS      -->
+  <!-- ========================================== -->
+  <footer class="w-full bg-[#030303] border-t border-[#00FF00] pt-10 pb-6 mt-auto">
+    <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
+      
+      <!-- HEMISFERIO IZQUIERDO: Visor de Comunidad -->
+      <div class="flex flex-col border border-[#003300] bg-[#050505] rounded p-4 relative overflow-hidden h-[200px]">
+        <div class="absolute top-0 left-0 w-full bg-[#002200] border-b border-[#00FF00] p-2 flex justify-between items-center z-10">
+          <span class="text-xs font-bold">>_ TELEMETRÍA DE SATISFACCIÓN</span>
+          <span class="text-xs animate-pulse text-white bg-green-700 px-2 rounded">EN VIVO 🟢</span>
+        </div>
+        <!-- Contenedor del scroll de opiniones -->
+        <div id="feedback-ticker" class="mt-8 h-full overflow-y-auto pr-2 space-y-3 text-sm opacity-80 scrollbar-hide">
+          <!-- Muestras estáticas (JS las reemplazará) -->
+          <div class="border-l-2 border-[#00FF00] pl-3 py-1 bg-[#0a0a0a]">
+            <p class="text-xs opacity-60">Hace 5 min | Valoración: 🚀</p>
+            <p>"Excelente herramienta, super rápida para mi local en Buenos Aires."</p>
+          </div>
+          <div class="border-l-2 border-[#00FF00] pl-3 py-1 bg-[#0a0a0a]">
+            <p class="text-xs opacity-60">Hace 12 min | Valoración: 😊</p>
+            <p>"Muy fácil de usar, el QR del WiFi funcionó a la perfección."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- HEMISFERIO DERECHO: Apoyo y Donaciones -->
+      <div class="flex flex-col items-center justify-center text-center gap-6">
+        <div>
+          <p class="mb-2 text-sm opacity-80">OPERACIÓN FINANCIADA E IMPULSADA POR:</p>
+          <p class="text-2xl font-bold neon-text tracking-widest">CYBERENTERADOS</p>
+        </div>
+        
+        <div class="w-full border-t border-dashed border-[#003300] pt-4">
+          <p class="text-xs mb-3 opacity-60">Apoya el búnker de contrainformación digital:</p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="#" class="border border-[#00FF00] bg-[#001100] text-[#00FF00] px-6 py-2 text-sm rounded hover:bg-[#00FF00] hover:text-black transition-colors flex items-center gap-2">
+              ☕ Cafecito / Mercado Pago
+            </a>
+            <a href="#" class="border border-[#00FF00] bg-[#001100] text-[#00FF00] px-6 py-2 text-sm rounded hover:bg-[#00FF00] hover:text-black transition-colors flex items-center gap-2">
+              🪙 Lightning Network (BTC)
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="mt-6 text-xs flex justify-center gap-4 opacity-70">
-      <a href="/privacidad" class="hover:text-white">Privacidad</a>
-      <a href="/terminos" class="hover:text-white">Términos</a>
+
+    <!-- Barra Inferior de Legales -->
+    <div class="max-w-[1400px] mx-auto mt-10 pt-4 border-t border-[#002200] flex flex-col md:flex-row justify-between items-center px-6 text-xs opacity-50">
+      <p>&copy; 2026 LibreQR Studios. Operando desde Buenos Aires.</p>
+      <div class="flex gap-6 mt-4 md:mt-0">
+        <a href="/privacidad" class="hover:text-[#00FF00] transition-colors">Política de Privacidad</a>
+        <a href="/terminos" class="hover:text-[#00FF00] transition-colors">Términos de Servicio</a>
+      </div>
     </div>
   </footer>
 
@@ -148,60 +224,40 @@
   <!-- MODALES DE OPERACIÓN CLANDESTINA           -->
   <!-- ========================================== -->
 
-  <!-- MODAL 1: ANUNCIO INTERSTITIAL Y DESCARGA -->
-  <div id="modal-ad" class="fixed inset-0 z-50 modal-overlay hidden flex flex-col items-center justify-center p-4">
-    <div class="bg-black border border-[#00FF00] p-8 max-w-lg w-full text-center neon-border rounded">
-      
-      <!-- Zona de Anuncio Simulado -->
+  <!-- MODAL 1: ANUNCIO INTERSTITIAL -->
+  <div id="modal-ad" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex flex-col items-center justify-center p-4">
+    <div class="bg-[#050505] border border-[#00FF00] p-8 max-w-lg w-full text-center shadow-[0_0_20px_rgba(0,255,0,0.3)] rounded">
       <div id="ad-zone" class="mb-6">
-        <h3 class="text-xl font-bold mb-2 blink">>_ PROCESANDO QR</h3>
-        <p class="text-sm mb-4">Verás un breve anuncio que nos ayuda a financiar el proyecto.</p>
-        <div class="ad-placeholder w-full h-[200px] mb-4">
-          [ VIDEO AD / BANNER CARGANDO... ]
+        <h3 class="text-xl font-bold mb-2 animate-pulse">>_ PROCESANDO QR</h3>
+        <p class="text-sm mb-4 opacity-80">Su código está encriptándose. Verá un anuncio para financiar el servidor libre.</p>
+        <div class="w-full h-[250px] mb-4 bg-[#0a0a0a] border border-dashed border-[#00FF00] flex items-center justify-center text-xs opacity-50">
+          [ VIDEO AD / REWARDED CARGANDO... ]
         </div>
-        <p class="text-2xl font-bold font-mono neon-text" id="ad-countdown">05</p>
+        <p class="text-3xl font-bold font-mono neon-text" id="ad-countdown">05</p>
       </div>
-
-      <!-- Zona de Descarga (Aparece tras el anuncio) -->
-      <div id="download-zone" class="hidden">
-        <h3 class="text-2xl font-bold text-[#00FF00] mb-4">¡CÓDIGO LISTO!</h3>
-        <div class="bg-white p-4 inline-block mb-6 rounded">
-          <!-- Aquí irá el QR generado en Canvas -->
-          <div id="qr-preview" class="w-[200px] h-[200px] border border-gray-300"></div>
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-          <button class="btn-neon py-2 text-sm rounded font-bold" onclick="triggerDownload('png')">🖼️ PNG</button>
-          <button class="btn-neon py-2 text-sm rounded font-bold" onclick="triggerDownload('jpg')">📷 JPG</button>
-          <button class="btn-neon py-2 text-sm rounded font-bold" onclick="triggerDownload('pdf')">📄 PDF</button>
-        </div>
-      </div>
-
     </div>
   </div>
 
   <!-- MODAL 2: FEEDBACK POST-DESCARGA -->
-  <div id="modal-feedback" class="fixed inset-0 z-50 modal-overlay hidden flex flex-col items-center justify-center p-4">
-    <div class="bg-black border border-[#00FF00] p-6 max-w-md w-full neon-border rounded text-center">
-      <h3 class="text-xl font-bold text-[#00FF00] mb-2">TELEMETRÍA DE SATISFACCIÓN</h3>
-      <p class="text-sm mb-6">Selecciona tu nivel de satisfacción. Anónimo y seguro.</p>
+  <div id="modal-feedback" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex flex-col items-center justify-center p-4">
+    <div class="bg-[#050505] border border-[#00FF00] p-6 max-w-md w-full shadow-[0_0_20px_rgba(0,255,0,0.3)] rounded text-center">
+      <h3 class="text-xl font-bold text-[#00FF00] mb-2">>_ TELEMETRÍA REQUERIDA</h3>
+      <p class="text-sm mb-6 opacity-80">El código QR ha sido extraído a su dispositivo. Indique el nivel de satisfacción de la operación.</p>
       
-      <!-- Selector de Emojis -->
-      <div class="flex justify-between mb-6 text-2xl cursor-pointer" id="emoji-picker">
-        <span class="hover:scale-125 transition-transform" data-val="1">🤬</span>
-        <span class="hover:scale-125 transition-transform" data-val="2">🙁</span>
-        <span class="hover:scale-125 transition-transform" data-val="3">😐</span>
-        <span class="hover:scale-125 transition-transform" data-val="4">😊</span>
-        <span class="hover:scale-125 transition-transform scale-125 ring-2 ring-[#00FF00] rounded-full" data-val="5">🚀</span>
+      <div class="flex justify-between mb-6 text-3xl cursor-pointer" id="emoji-picker">
+        <span class="hover:scale-125 transition-transform grayscale hover:grayscale-0" data-val="1">🤬</span>
+        <span class="hover:scale-125 transition-transform grayscale hover:grayscale-0" data-val="2">🙁</span>
+        <span class="hover:scale-125 transition-transform grayscale hover:grayscale-0" data-val="3">😐</span>
+        <span class="hover:scale-125 transition-transform grayscale hover:grayscale-0" data-val="4">😊</span>
+        <span class="hover:scale-125 transition-transform scale-125 ring-2 ring-[#00FF00] rounded-full grayscale-0" data-val="5">🚀</span>
       </div>
 
-      <!-- Caja de Comentario -->
-      <textarea id="feedback-text" maxlength="140" rows="3" class="w-full p-2 bg-black border border-[#00FF00] text-[#00FF00] focus:outline-none mb-2 font-mono text-sm" placeholder="(Opcional) Deja un comentario táctico..."></textarea>
-      <div class="text-right text-xs mb-4"><span id="char-count">0</span> / 140</div>
+      <textarea id="feedback-text" maxlength="140" rows="3" class="w-full p-3 bg-[#0a0a0a] border border-[#00FF00] text-[#00FF00] focus:outline-none focus:ring-1 focus:ring-[#00FF00] mb-2 font-mono text-sm resize-none rounded" placeholder="(Opcional) Deje un reporte táctico de la operación..."></textarea>
+      <div class="text-right text-xs mb-4 opacity-50"><span id="char-count">0</span> / 140 Chars</div>
 
-      <!-- Botones de Acción -->
-      <div class="flex flex-col gap-2">
-        <button id="btn-send-feedback" class="btn-neon py-2 w-full font-bold rounded bg-[#002200]">ENVIAR FEEDBACK</button>
-        <button id="btn-close-feedback" class="text-gray-400 text-sm hover:text-white mt-2">✖ Cerrar (🚀)</button>
+      <div class="flex flex-col gap-3">
+        <button id="btn-send-feedback" class="border border-[#00FF00] bg-[#002200] text-[#00FF00] font-bold py-3 w-full rounded hover:bg-[#00FF00] hover:text-black transition-colors shadow-[0_0_10px_rgba(0,255,0,0.2)]">ENVIAR TELEMETRÍA</button>
+        <button id="btn-close-feedback" class="text-gray-500 text-sm hover:text-white transition-colors">✖ Cerrar (🚀)</button>
       </div>
     </div>
   </div>
