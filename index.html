@@ -6,12 +6,16 @@
   <title>LibreQR Studios | Generador Gratuito y Privado</title>
   <meta name="description" content="Crea códigos QR gratuitos al instante. Sin registros, máxima privacidad. Descarga en PNG, JPG o PDF. Impulsado por CyberEnterados.">
   
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/styles.css">
 
   <!-- Script de AdSense (Reemplazar con ID real al aprobar) -->
   <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <!-- Motor de Renderizado QR Avanzado -->
+<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+
 </head>
 <body class="min-h-screen flex flex-col items-center p-4">
 
@@ -28,44 +32,98 @@
   <!-- CONTENEDOR PRINCIPAL: 1 Columna en móvil, 2 en PC -->
   <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-8">
     
-    <!-- BANNER 2: SIDEBAR IZQ O MIDDLE EN MÓVIL -->
-    <div class="ad-placeholder w-full h-[250px] lg:h-[600px] neon-border order-2 lg:order-1">
-      [ ESPACIO PUBLICITARIO 2 - SIDEBAR/MIDDLE ]
+    <!-- BANNER 2: SIDEBAR (AdSense) -->
+    <div class="ad-placeholder w-full h-[250px] lg:h-[600px] neon-border order-2 lg:order-1 flex items-center justify-center text-xs text-green-800">
+      [ BANNER PUBLICITARIO ]
     </div>
 
-    <!-- PANEL CENTRAL: GENERADOR -->
-    <section class="col-span-1 lg:col-span-2 p-6 panel-bg neon-border flex flex-col gap-6 order-1 lg:order-2">
-      
-      <!-- Selector de Tipo -->
+    <!-- PANEL CENTRAL: ENTRADA DE DATOS (Fase 1) -->
+    <section id="input-zone" class="col-span-1 lg:col-span-2 p-6 panel-bg neon-border flex flex-col gap-6 order-1 lg:order-2">
       <div>
-        <h2 class="text-xl mb-4 font-bold border-b border-[#00FF00] pb-2">>_ SELECCIONA EL FORMATO</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="type-selector">
-          <button class="btn-neon active py-2 rounded" data-type="url">🌐 Enlace</button>
-          <button class="btn-neon py-2 rounded" data-type="wifi">📶 Wi-Fi</button>
-          <button class="btn-neon py-2 rounded" data-type="whatsapp">💬 WhatsApp</button>
-          <button class="btn-neon py-2 rounded" data-type="text">📄 Texto</button>
+        <h2 class="text-xl mb-4 font-bold border-b border-[#00FF00] pb-2">>_ 1. SELECCIONA EL FORMATO</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 md:grid-cols-5 gap-2" id="type-selector">
+          <button class="btn-neon active py-2 rounded text-sm" data-type="url">🌐 Web</button>
+          <button class="btn-neon py-2 rounded text-sm" data-type="wifi">📶 Wi-Fi</button>
+          <button class="btn-neon py-2 rounded text-sm" data-type="vcard">🎴 vCard</button>
+          <button class="btn-neon py-2 rounded text-sm" data-type="text">📄 Texto</button>
+          <button class="btn-neon py-2 rounded text-sm" data-type="maps">📍 GPS</button>
         </div>
       </div>
 
-      <!-- Área de Input Dinámica -->
       <div id="input-area">
-        <label class="block text-sm mb-2">>_ INGRESA LOS DATOS</label>
-        <input type="url" id="qr-input" placeholder="https://www.cyberenterados.com" class="w-full p-4 bg-black border border-[#00FF00] text-[#00FF00] focus:outline-none focus:ring-2 focus:ring-[#00FF00] rounded font-mono">
+        <!-- JS inyectará el formulario aquí -->
       </div>
 
-      <!-- Botón de Generación -->
-      <button id="btn-generate" class="w-full btn-neon font-bold text-lg md:text-xl py-4 rounded animate-pulse hover:animate-none">
+      <button id="btn-generate" class="w-full btn-neon font-bold text-xl py-4 rounded animate-pulse hover:animate-none bg-[#001100]">
         ⚡ GENERAR CÓDIGO QR ⚡
       </button>
-
-      <!-- SECCIÓN DE TEXTO SEO INVISIBLE EN UI PERO VISIBLE PARA BOTS -->
-      <article class="mt-8 text-xs opacity-60">
-        <h3 class="text-lg font-bold text-[#00FF00]">¿Cómo funciona LibreQR Studios?</h3>
-        <p>Generar un código QR nunca fue tan fácil. Nuestra herramienta no requiere registro, es 100% gratuita y te permite exportar en formato PNG, JPG y PDF. Ideal para menús de restaurantes, acceso Wi-Fi y marketing digital en Buenos Aires y el mundo. Protegemos tu privacidad al no guardar datos personales.</p>
-      </article>
-
     </section>
 
+    <!-- PANTALLA DE PERSONALIZACIÓN Y VISOR (Fase 2 - Oculta inicialmente) -->
+    <section id="customization-zone" class="hidden col-span-1 lg:col-span-2 p-6 panel-bg neon-border flex flex-col md:flex-row gap-6 order-1 lg:order-2">
+      
+      <!-- Controles de Diseño -->
+      <div class="flex-1 flex flex-col gap-6">
+        <h2 class="text-xl font-bold border-b border-[#00FF00] pb-2">>_ 2. ESTACIÓN DE DISEÑO</h2>
+        
+        <!-- Chips de Colores -->
+        <div>
+          <label class="block text-sm mb-2 opacity-80">🎨 Color Principal</label>
+          <div class="flex flex-wrap gap-3 items-center" id="color-chips">
+            <button class="color-chip rounded-full w-8 h-8 ring-2 ring-[#00FF00]" data-color="#000000" style="background-color: #000000;"></button>
+            <button class="color-chip rounded-full w-8 h-8" data-color="#00FF00" style="background-color: #00FF00;"></button>
+            <button class="color-chip rounded-full w-8 h-8" data-color="#0055FF" style="background-color: #0055FF;"></button>
+            <button class="color-chip rounded-full w-8 h-8" data-color="#FF0055" style="background-color: #FF0055;"></button>
+            <!-- Selector libre -->
+            <input type="color" id="custom-color-picker" class="w-10 h-10 rounded cursor-pointer bg-transparent border border-[#00FF00]" title="Elige otro color">
+          </div>
+        </div>
+
+        <!-- Formas -->
+        <div>
+          <label class="block text-sm mb-2 opacity-80">🧩 Estilo de Bloques</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="shape-btn btn-neon py-2 text-sm rounded bg-[#00FF00] text-black font-bold" data-shape="square">■ Cuadrado</button>
+            <button class="shape-btn btn-neon py-2 text-sm rounded" data-shape="dots">● Puntos</button>
+            <button class="shape-btn btn-neon py-2 text-sm rounded" data-shape="extra-rounded">🔲 Curvo</button>
+          </div>
+        </div>
+
+        <!-- Logo -->
+        <div>
+          <label class="block text-sm mb-2 opacity-80">🖼️ Logo Central (Máx 2MB)</label>
+          <input type="file" id="logo-upload" accept="image/png, image/jpeg, image/svg+xml" class="hidden">
+          <button onclick="document.getElementById('logo-upload').click()" class="btn-neon py-2 px-4 text-sm rounded w-full border-dashed">
+            📁 Subir tu Logo
+          </button>
+          <button id="btn-clear-logo" class="text-red-500 text-xs mt-2 hidden w-full text-center">✖ Quitar Logo</button>
+        </div>
+      </div>
+
+      <!-- Visor en Vivo y Resoluciones -->
+      <div class="flex-1 flex flex-col items-center justify-between border border-dashed border-[#00FF00] p-4 bg-[#050505] relative rounded">
+        <h3 class="absolute top-2 left-2 text-xs opacity-50 font-mono">👁️ LIVE_CANVAS</h3>
+        
+        <div id="qr-live-preview" class="bg-white p-2 rounded shadow-[0_0_15px_rgba(0,255,0,0.2)] mt-6">
+          <!-- El motor JS inyectará el Canvas aquí -->
+        </div>
+        
+        <div class="w-full mt-6">
+          <label class="block text-xs text-center mb-2 opacity-80">📐 SELECCIONA RESOLUCIÓN</label>
+          <select id="download-resolution" class="w-full p-2 bg-black border border-[#00FF00] text-[#00FF00] font-mono text-sm mb-4 rounded cursor-pointer">
+            <option value="500">Estándar (500x500 px)</option>
+            <option value="1000">Alta Definición HD (1000x1000 px)</option>
+            <option value="2000">Ultra 4K (2000x2000 px)</option>
+          </select>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-download-png" class="btn-neon font-bold py-3 text-sm bg-[#003300] rounded">🖼️ BAJAR PNG</button>
+            <button id="btn-download-jpg" class="btn-neon font-bold py-3 text-sm bg-[#003300] rounded">📷 BAJAR JPG</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
   </main>
 
   <!-- BANNER 3: PRE-FEEDBACK (AdSense) -->
