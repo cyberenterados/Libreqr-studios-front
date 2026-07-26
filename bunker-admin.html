@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BÚNKER CENTRAL | Acceso Clasificado</title>
-  <meta name="robots" content="noindex, nofollow"> <!-- 🛡️ Bloquea motores de búsqueda -->
+  <meta name="robots" content="noindex, nofollow"> <!-- 🛡️ Bloquea rastreadores -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
@@ -16,7 +16,10 @@
     .neon-border { border: 1px solid #00FF00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
     .neon-text { text-shadow: 0 0 5px #00FF00; }
     .btn-action { transition: all 0.2s; cursor: pointer; padding: 4px 8px; border-radius: 4px; border: 1px solid transparent; }
-    .btn-action:hover { border-color: #00FF00; background-color: rgba(0, 255, 0, 0.1); }
+    /* Efectos de hover por colores tácticos */
+    .btn-edit:hover { border-color: #00FFFF; background-color: rgba(0, 255, 255, 0.1); }
+    .btn-vis:hover { border-color: #FFFF00; background-color: rgba(255, 255, 0, 0.1); }
+    .btn-del:hover { border-color: #FF0000; background-color: rgba(255, 0, 0, 0.1); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col p-6 overflow-hidden">
@@ -27,10 +30,10 @@
   <div id="login-screen" class="flex-1 flex flex-col items-center justify-center">
     <div class="p-8 bg-[#0a0a0a] neon-border w-full max-w-md text-center">
       <h1 class="text-3xl font-bold mb-2 blink neon-text">>_ ACCESO RESTRINGIDO</h1>
-      <p class="text-xs opacity-70 mb-6">Identifíquese, Comandante. Búnker Buenos Aires.</p>
+      <p class="text-xs opacity-70 mb-6">Identifíquese, Comandante. Base de Operaciones B.A.</p>
       
       <input type="password" id="admin-key" placeholder="Ingrese ADMIN_SECRET_KEY..." 
-        class="w-full p-3 bg-black border border-[#00FF00] text-[#00FF00] text-center font-mono outline-none mb-4">
+        class="w-full p-3 bg-black border border-[#00FF00] text-[#00FF00] text-center font-mono outline-none mb-4 focus:shadow-[0_0_15px_rgba(0,255,0,0.5)] transition-shadow">
       
       <button id="btn-login" class="w-full bg-[#003300] border border-[#00FF00] py-3 font-bold hover:bg-[#00FF00] hover:text-black transition-colors">
         INICIAR SESIÓN CLANDESTINA
@@ -75,7 +78,7 @@
   <!-- ⚙️ SCRIPTS DEL BÚNKER (AISLADOS)           -->
   <!-- ========================================== -->
   <script>
-    const API_URL = 'https://libreqr-studios-back.onrender.com/api'; // Su servidor de combate
+    const API_URL = 'https://libreqr-studios-back.onrender.com/api'; // Servidor de combate
     let secretKey = '';
 
     // Nodos del DOM
@@ -93,7 +96,6 @@
       
       btnLogin.innerText = "VERIFICANDO...";
       
-      // Intentar obtener los datos. Si la clave es correcta, el backend responderá.
       try {
         const response = await fetch(`${API_URL}/admin/feedback`, {
           method: 'GET',
@@ -102,30 +104,27 @@
 
         if (response.ok) {
           const data = await response.json();
-          // Acceso concedido
           loginScreen.classList.add('hidden');
           dashboardScreen.classList.remove('hidden');
           dashboardScreen.classList.add('flex');
           renderTable(data.reviews);
         } else {
-          // Acceso denegado
           errorMsg.classList.remove('hidden');
           btnLogin.innerText = "INICIAR SESIÓN CLANDESTINA";
         }
       } catch (err) {
-        alert("🔴 FALLA DE ENLACE: No se pudo contactar con Render.");
+        alert("🔴 FALLA DE ENLACE: No se pudo contactar con el servidor central.");
         btnLogin.innerText = "INICIAR SESIÓN CLANDESTINA";
       }
     });
 
-    // Permitir "Enter" para el login
     inputKey.addEventListener('keypress', (e) => { if(e.key === 'Enter') btnLogin.click(); });
 
     // === 2. MOTOR DE RENDERIZADO DE TABLA ===
     function renderTable(reviews) {
       tableBody.innerHTML = '';
       if(reviews.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-6 opacity-50">Sin telemetría en el radar.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-6 opacity-50">Radar despejado. Sin telemetría.</td></tr>`;
         return;
       }
 
@@ -134,25 +133,30 @@
         const emojis = ['🤬', '🙁', '😐', '😊', '🚀'];
         const emoji = emojis[rev.rating - 1] || '🚀';
         
-        // Banderas de estado visual
         const statusBadge = rev.isPublic 
-          ? `<span class="bg-green-900 text-green-300 px-2 py-1 rounded text-xs">PÚBLICO</span>` 
-          : `<span class="bg-red-900 text-red-300 px-2 py-1 rounded text-xs border border-red-500">OCULTO</span>`;
+          ? `<span class="bg-green-900 text-green-300 px-2 py-1 rounded text-xs border border-green-500 shadow-[0_0_5px_#00FF00]">PÚBLICO</span>` 
+          : `<span class="bg-red-900 text-red-300 px-2 py-1 rounded text-xs border border-red-500 shadow-[0_0_5px_#FF0000]">OCULTO</span>`;
 
-        // Alertas de SPAM
         const spamFlag = rev.isSpam ? `<span class="ml-2 blink text-red-500" title="Posible SPAM">🚩</span>` : '';
+        const safeComment = rev.comment ? rev.comment.replace(/'/g, "\\'") : '';
 
         const row = `
-          <tr class="border-b border-[#002200] hover:bg-[#001100]">
+          <tr class="border-b border-[#002200] hover:bg-[#001100] transition-colors">
             <td class="p-3 opacity-80 text-xs">${date}</td>
             <td class="p-3 text-xl">${emoji}</td>
             <td class="p-3 text-gray-300 text-xs max-w-xs truncate" title="${rev.comment || 'Sin texto'}">${rev.comment || '<i>Silencioso</i>'}${spamFlag}</td>
             <td class="p-3">${statusBadge}</td>
             <td class="p-3 text-right">
-              <button onclick="toggleVisibility('${rev._id}', ${!rev.isPublic})" class="btn-action text-yellow-500 mr-2" title="Ocultar/Mostrar en Frontend">
+              <!-- Botón Editar (Cian) -->
+              <button onclick="editComment('${rev._id}', '${safeComment}')" class="btn-action btn-edit text-[#00FFFF] mr-2" title="Sobrescribir Texto">
+                ✏️ Editar
+              </button>
+              <!-- Botón Ocultar/Mostrar (Amarillo) -->
+              <button onclick="toggleVisibility('${rev._id}', ${!rev.isPublic})" class="btn-action btn-vis text-[#FFFF00] mr-2" title="Alternar Visibilidad">
                 ${rev.isPublic ? '👁️ Ocultar' : '🟢 Mostrar'}
               </button>
-              <button onclick="purgeData('${rev._id}')" class="btn-action text-red-500" title="Eliminar de la Bóveda">
+              <!-- Botón Purgar (Rojo) -->
+              <button onclick="purgeData('${rev._id}')" class="btn-action btn-del text-[#FF0000]" title="Eliminar de la Bóveda">
                 🗑️ Purgar
               </button>
             </td>
@@ -162,39 +166,49 @@
       });
     }
 
-    // === 3. ACCIÓN TÁCTICA: CAMBIAR VISIBILIDAD (PUT) ===
+    // === 3. ACCIÓN TÁCTICA: EDITAR TEXTO (PUT) ===
+    window.editComment = async (id, currentComment) => {
+      const newComment = prompt(">_ Ingrese el nuevo texto de telemetría (máx. 140 caracteres):", currentComment);
+      if (newComment === null || newComment.trim() === currentComment) return;
+
+      try {
+        const res = await fetch(`${API_URL}/admin/feedback/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-admin-key': secretKey },
+          body: JSON.stringify({ comment: newComment.trim() })
+        });
+        if (res.ok) reloadData();
+        else alert("🔴 ERROR AL SOBRESCRIBIR LA BÓVEDA.");
+      } catch (e) { console.error("🔴 Falla de enlace:", e); }
+    };
+
+    // === 4. ACCIÓN TÁCTICA: CAMBIAR VISIBILIDAD (PUT) ===
     window.toggleVisibility = async (id, makePublic) => {
       try {
         const res = await fetch(`${API_URL}/admin/feedback/${id}/visibility`, {
           method: 'PUT',
-          headers: { 
-            'Content-Type': 'application/json',
-            'x-admin-key': secretKey 
-          },
+          headers: { 'Content-Type': 'application/json', 'x-admin-key': secretKey },
           body: JSON.stringify({ isPublic: makePublic })
         });
-        
         if(res.ok) reloadData();
         else alert("🔴 Error al cambiar estado.");
       } catch (e) { console.error(e); }
     };
 
-    // === 4. ACCIÓN TÁCTICA: PURGAR (DELETE) ===
+    // === 5. ACCIÓN TÁCTICA: PURGAR (DELETE) ===
     window.purgeData = async (id) => {
       if(!confirm("⚠️ ¿Autoriza la destrucción irreversible de esta telemetría?")) return;
-      
       try {
         const res = await fetch(`${API_URL}/admin/feedback/${id}`, {
           method: 'DELETE',
           headers: { 'x-admin-key': secretKey }
         });
-        
         if(res.ok) reloadData();
         else alert("🔴 Error al ejecutar purga.");
       } catch (e) { console.error(e); }
     };
 
-    // === 5. RECARGA SILENCIOSA DE DATOS ===
+    // === 6. RECARGA SILENCIOSA DE DATOS ===
     async function reloadData() {
       const res = await fetch(`${API_URL}/admin/feedback`, { headers: { 'x-admin-key': secretKey } });
       if(res.ok) {
@@ -203,7 +217,7 @@
       }
     }
 
-    // === 6. PROTOCOLO DE SALIDA ===
+    // === 7. PROTOCOLO DE SALIDA ===
     document.getElementById('btn-logout').addEventListener('click', () => {
       secretKey = '';
       tableBody.innerHTML = '';
