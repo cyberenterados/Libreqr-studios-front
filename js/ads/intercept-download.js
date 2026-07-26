@@ -1,17 +1,11 @@
-//(Slot 5 - Operación Intersticial / Pop-under en Descarga)
-
 // ==========================================
-// 🎯 BATERÍA PUBLICITARIA: SLOT 5 (INTERSTICIAL DE DESCARGA)
+// 🎯 BATERÍA PUBLICITARIA: SLOT 5 (INTERSTICIAL / POPUNDER)
 // ==========================================
 const InterceptDownload = {
-  // Dispara el pop-under o banner de alta rentabilidad durante la retención de descarga
-  trigger(onComplete, holdTimeSeconds = 15) {
-    console.log(`🎯 [ADS] Detonando Intersticial de Descarga. Retención: ${holdTimeSeconds}s`);
+  // Maneja la retención visual en el generador (Modal y cuenta regresiva)
+  trigger(onComplete, holdTimeSeconds = 5) {
+    console.log(`🎯 [ADS] Detonando retención visual. Tiempo: ${holdTimeSeconds}s`);
 
-    // 1. Ejecutar Pop-under o código especial de red (Adsterra / PropellerAds / etc.)
-    this.executePopUnderScript();
-
-    // 2. Interfaz de retención visual para el usuario civil
     const modalAd = document.getElementById('modal-ad');
     const adCountdown = document.getElementById('ad-countdown');
 
@@ -31,13 +25,23 @@ const InterceptDownload = {
         }
       }, 1000);
     } else {
-      // Si el modal no está en el DOM, ejecuta la descarga directamente
+      // Respaldo de emergencia si falla la UI
       if (typeof onComplete === 'function') onComplete();
     }
-  },
-
-  executePopUnderScript() {
-    // Aquí inyectaremos el script On-Click o Pop-under de la red cuando activemos los anuncios reales.
   }
 };
+
+// 💣 CARGA SILENCIOSA DE LA OJIVA ADSTERRA (Auto-ejecutable)
+(function armarMisil() {
+  try {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    // AQUÍ ESTÁ SU MUNICIÓN EXACTA DE ADSTERRA
+    script.src = 'https://pl30551324.effectivecpmnetwork.com/92/1a/56/921a5674ddb35e0dd2b29bbfd20fb156.js';
+    document.head.appendChild(script);
+    console.log("🟢 [ADS] Ojiva Popunder (Adsterra) enclavada y lista para detonar.");
+  } catch (e) {
+    console.warn("🔴 [ADS] Falla al armar el misil Popunder.");
+  }
+})();
 
