@@ -1,5 +1,3 @@
-//(Slot 4 - Pie de página / Footer)
-
 // ==========================================
 // 🛡️ BATERÍA PUBLICITARIA: SLOT 4 (FOOTER)
 // ==========================================
@@ -10,13 +8,17 @@ const BannerBottom = {
     const container = document.getElementById(this.slotId);
     if (!container) return;
 
+    // INYECCIÓN DE MUNICIÓN REAL: A-Ads (Bloque #2449491 - Adaptable)
     container.innerHTML = `
-      <div class="w-full flex justify-center items-center p-2 bg-[#0a0a0a] border border-[#002200] rounded text-center min-h-[90px]">
-        <!-- PLACEHOLDER / SCRIPT RED PUBLICITARIA -->
-        <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">[ SLOT 4 BOTTOM ]</span>
+      <!-- BEGIN AADS AD UNIT 2449491 -->
+      <div style="width: 100%; margin: auto; position: relative; z-index: 10;">
+        <iframe data-aa='2449491' src='//acceptable.a-ads.com/2449491/?size=Adaptive'
+                style='border:0; padding:0; width:100%; height:auto; min-height:90px; overflow:hidden; display:block; margin:auto;'>
+        </iframe>
       </div>
+      <!-- END AADS AD UNIT 2449491 -->
     `;
-    console.log("🟢 [ADS] Slot 4 (Bottom) desplegado en posición.");
+    
+    console.log("🟢 [ADS] Slot 4 (Bottom) desplegado y armado con A-Ads.");
   }
 };
-
