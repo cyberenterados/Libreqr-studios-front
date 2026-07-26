@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BÚNKER CENTRAL | Acceso Clasificado</title>
-  <meta name="robots" content="noindex, nofollow"> <!-- 🛡️ Bloquea rastreadores -->
+  <meta name="robots" content="noindex, nofollow">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
@@ -12,23 +12,38 @@
       background-color: #050505;
       color: #00FF00;
       font-family: 'Fira Code', monospace;
+      position: relative;
+      overflow-x: hidden;
     }
-    .neon-border { border: 1px solid #00FF00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+    /* 🟢 EFECTO MATRIX BACKGROUND */
+    #matrix-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      opacity: 0.15; /* Sutil para no distraer las operaciones */
+      pointer-events: none;
+    }
+    .neon-border { border: 1px solid #00FF00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); background-color: rgba(5, 5, 5, 0.9); }
     .neon-text { text-shadow: 0 0 5px #00FF00; }
     .btn-action { transition: all 0.2s; cursor: pointer; padding: 4px 8px; border-radius: 4px; border: 1px solid transparent; }
-    /* Efectos de hover por colores tácticos */
     .btn-edit:hover { border-color: #00FFFF; background-color: rgba(0, 255, 255, 0.1); }
     .btn-vis:hover { border-color: #FFFF00; background-color: rgba(255, 255, 0, 0.1); }
     .btn-del:hover { border-color: #FF0000; background-color: rgba(255, 0, 0, 0.1); }
   </style>
 </head>
-<body class="min-h-screen flex flex-col p-6 overflow-hidden">
+<body class="min-h-screen flex flex-col p-6">
+
+  <!-- Fondo dinámico Matrix -->
+  <canvas id="matrix-canvas"></canvas>
 
   <!-- ========================================== -->
   <!-- 🔐 PANTALLA DE AUTENTICACIÓN TÁCTICA       -->
   <!-- ========================================== -->
   <div id="login-screen" class="flex-1 flex flex-col items-center justify-center">
-    <div class="p-8 bg-[#0a0a0a] neon-border w-full max-w-md text-center">
+    <div class="p-8 neon-border w-full max-w-md text-center">
       <h1 class="text-3xl font-bold mb-2 blink neon-text">>_ ACCESO RESTRINGIDO</h1>
       <p class="text-xs opacity-70 mb-6">Identifíquese, Comandante. Base de Operaciones B.A.</p>
       
@@ -43,22 +58,27 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 👁️ DASHBOARD CRUD (PANEL DE MANDO)        -->
+  <!-- 👁️ DASHBOARD CRUD & STATS (PANEL DE MANDO) -->
   <!-- ========================================== -->
   <div id="dashboard-screen" class="hidden flex-col h-[90vh]">
     <header class="flex justify-between items-end border-b border-[#00FF00] pb-4 mb-6">
       <div>
         <h1 class="text-3xl font-bold neon-text">>_ TERMINAL DE TELEMETRÍA</h1>
-        <p class="text-xs opacity-70">Sistemas operativos. Enlace seguro establecido con Render.</p>
+        <p class="text-xs opacity-70 mb-2">Sistemas operativos. Enlace seguro establecido con Render.</p>
+        <!-- 🟢 CONTADOR MAESTRO DE QRs -->
+        <div class="inline-block bg-[#002200] border border-[#00FF00] px-3 py-1 rounded shadow-[0_0_8px_rgba(0,255,0,0.3)]">
+          <span class="text-xs opacity-80">QRs GENERADOS:</span> 
+          <span id="qr-counter" class="text-xl font-bold neon-text ml-2">--</span>
+        </div>
       </div>
       <button id="btn-logout" class="border border-[#00FF00] text-xs py-1 px-4 text-red-500 hover:bg-red-900 hover:text-white transition-colors">
         [x] DESCONECTAR
       </button>
     </header>
 
-    <div class="flex-1 overflow-auto border border-[#003300] bg-[#0a0a0a] p-1">
+    <div class="flex-1 overflow-auto border border-[#003300] bg-[#0a0a0a]/90 p-1 rounded">
       <table class="w-full text-left border-collapse text-sm">
-        <thead class="bg-[#001100] border-b border-[#00FF00] sticky top-0">
+        <thead class="bg-[#001100] border-b border-[#00FF00] sticky top-0 z-10">
           <tr>
             <th class="p-3">FECHA</th>
             <th class="p-3">RATING</th>
@@ -68,7 +88,7 @@
           </tr>
         </thead>
         <tbody id="telemetry-table">
-          <!-- JS inyectará las filas de la base de datos aquí -->
+          <!-- Datos inyectados por JS -->
         </tbody>
       </table>
     </div>
@@ -78,16 +98,49 @@
   <!-- ⚙️ SCRIPTS DEL BÚNKER (AISLADOS)           -->
   <!-- ========================================== -->
   <script>
-    const API_URL = 'https://libreqr-studios-back.onrender.com/api'; // Servidor de combate
+    const API_URL = 'https://libreqr-studios-back.onrender.com/api';
     let secretKey = '';
 
-    // Nodos del DOM
     const loginScreen = document.getElementById('login-screen');
     const dashboardScreen = document.getElementById('dashboard-screen');
     const inputKey = document.getElementById('admin-key');
     const btnLogin = document.getElementById('btn-login');
     const tableBody = document.getElementById('telemetry-table');
     const errorMsg = document.getElementById('login-error');
+
+    // === 🟢 MOTOR MATRIX BACKGROUND ===
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%-&/\\<>*+';
+    const fontSize = 14;
+    let columns = canvas.width / fontSize;
+    const drops = [];
+    for (let i = 0; i < columns; i++) { drops[i] = 1; }
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00FF00';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 50);
 
     // === 1. PROTOCOLO DE INGRESO ===
     btnLogin.addEventListener('click', async () => {
@@ -103,11 +156,10 @@
         });
 
         if (response.ok) {
-          const data = await response.json();
           loginScreen.classList.add('hidden');
           dashboardScreen.classList.remove('hidden');
           dashboardScreen.classList.add('flex');
-          renderTable(data.reviews);
+          reloadData(); // Carga comentarios y contador maestro
         } else {
           errorMsg.classList.remove('hidden');
           btnLogin.innerText = "INICIAR SESIÓN CLANDESTINA";
@@ -147,15 +199,12 @@
             <td class="p-3 text-gray-300 text-xs max-w-xs truncate" title="${rev.comment || 'Sin texto'}">${rev.comment || '<i>Silencioso</i>'}${spamFlag}</td>
             <td class="p-3">${statusBadge}</td>
             <td class="p-3 text-right">
-              <!-- Botón Editar (Cian) -->
               <button onclick="editComment('${rev._id}', '${safeComment}')" class="btn-action btn-edit text-[#00FFFF] mr-2" title="Sobrescribir Texto">
                 ✏️ Editar
               </button>
-              <!-- Botón Ocultar/Mostrar (Amarillo) -->
               <button onclick="toggleVisibility('${rev._id}', ${!rev.isPublic})" class="btn-action btn-vis text-[#FFFF00] mr-2" title="Alternar Visibilidad">
                 ${rev.isPublic ? '👁️ Ocultar' : '🟢 Mostrar'}
               </button>
-              <!-- Botón Purgar (Rojo) -->
               <button onclick="purgeData('${rev._id}')" class="btn-action btn-del text-[#FF0000]" title="Eliminar de la Bóveda">
                 🗑️ Purgar
               </button>
@@ -208,12 +257,24 @@
       } catch (e) { console.error(e); }
     };
 
-    // === 6. RECARGA SILENCIOSA DE DATOS ===
+    // === 6. RECARGA SILENCIOSA DE DATOS Y ESTADÍSTICAS ===
     async function reloadData() {
-      const res = await fetch(`${API_URL}/admin/feedback`, { headers: { 'x-admin-key': secretKey } });
-      if(res.ok) {
-        const data = await res.json();
+      // Cargar comentarios
+      const resFeedback = await fetch(`${API_URL}/admin/feedback`, { headers: { 'x-admin-key': secretKey } });
+      if(resFeedback.ok) {
+        const data = await resFeedback.json();
         renderTable(data.reviews);
+      }
+
+      // Cargar Contador Global
+      try {
+        const resStats = await fetch(`${API_URL}/admin/stats`, { headers: { 'x-admin-key': secretKey } });
+        if(resStats.ok) {
+          const stats = await resStats.json();
+          document.getElementById('qr-counter').innerText = stats.totalQrGenerated;
+        }
+      } catch (e) {
+        console.error("🔴 Error obteniendo estadísticas de radar.", e);
       }
     }
 

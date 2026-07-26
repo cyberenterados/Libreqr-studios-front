@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (qrEngine) qrEngine.update({ image: '' }); // Quita la imagen
   });
 
-  // === DESCARGA EN ALTA RESOLUCIÓN HD/4K ===
+  // === DESCARGA EN ALTA RESOLUCIÓN HD/4K + TELEMETRÍA DE CONTEO (+1) ===
   function executeDownload(extension) {
     if (!qrEngine) return;
     const size = parseInt(document.getElementById('download-resolution').value);
@@ -234,6 +234,16 @@ document.addEventListener('DOMContentLoaded', () => {
       // Restaurar tamaño visual para que no se rompa la web
       qrEngine.update({ width: 250, height: 250 });
       
+      // 🟢 AVISAR AL BÚNKER DE LA NUEVA DESCARGA (+1)
+      try {
+        fetch(`${API_BASE_URL}/stats/increment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        }).catch(e => console.warn("Telemetría de conteo en segundo plano silenciada."));
+      } catch (err) {
+        // Ignorar para no bloquear la UI
+      }
+
       // Abrir modal de Feedback post-descarga
       document.getElementById('modal-feedback').classList.remove('hidden');
     });
