@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BÚNKER CENTRAL | Acceso Clasificado</title>
+  <meta name="robots" content="noindex, nofollow"> <!-- 🛡️ Bloquea motores de búsqueda -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+    body {
+      background-color: #050505;
+      color: #00FF00;
+      font-family: 'Fira Code', monospace;
+    }
+    .neon-border { border: 1px solid #00FF00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+    .neon-text { text-shadow: 0 0 5px #00FF00; }
+    .btn-action { transition: all 0.2s; cursor: pointer; padding: 4px 8px; border-radius: 4px; border: 1px solid transparent; }
+    .btn-action:hover { border-color: #00FF00; background-color: rgba(0, 255, 0, 0.1); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col p-6 overflow-hidden">
+
+  <!-- ========================================== -->
+  <!-- 🔐 PANTALLA DE AUTENTICACIÓN TÁCTICA       -->
+  <!-- ========================================== -->
+  <div id="login-screen" class="flex-1 flex flex-col items-center justify-center">
+    <div class="p-8 bg-[#0a0a0a] neon-border w-full max-w-md text-center">
+      <h1 class="text-3xl font-bold mb-2 blink neon-text">>_ ACCESO RESTRINGIDO</h1>
+      <p class="text-xs opacity-70 mb-6">Identifíquese, Comandante. Búnker Buenos Aires.</p>
+      
+      <input type="password" id="admin-key" placeholder="Ingrese ADMIN_SECRET_KEY..." 
+        class="w-full p-3 bg-black border border-[#00FF00] text-[#00FF00] text-center font-mono outline-none mb-4">
+      
+      <button id="btn-login" class="w-full bg-[#003300] border border-[#00FF00] py-3 font-bold hover:bg-[#00FF00] hover:text-black transition-colors">
+        INICIAR SESIÓN CLANDESTINA
+      </button>
+      <p id="login-error" class="text-red-500 text-xs mt-4 hidden">🔴 CREDENCIALES INVÁLIDAS. ACCESO DENEGADO.</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 👁️ DASHBOARD CRUD (PANEL DE MANDO)        -->
+  <!-- ========================================== -->
+  <div id="dashboard-screen" class="hidden flex-col h-[90vh]">
+    <header class="flex justify-between items-end border-b border-[#00FF00] pb-4 mb-6">
+      <div>
+        <h1 class="text-3xl font-bold neon-text">>_ TERMINAL DE TELEMETRÍA</h1>
+        <p class="text-xs opacity-70">Sistemas operativos. Enlace seguro establecido con Render.</p>
+      </div>
+      <button id="btn-logout" class="border border-[#00FF00] text-xs py-1 px-4 text-red-500 hover:bg-red-900 hover:text-white transition-colors">
+        [x] DESCONECTAR
+      </button>
+    </header>
+
+    <div class="flex-1 overflow-auto border border-[#003300] bg-[#0a0a0a] p-1">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead class="bg-[#001100] border-b border-[#00FF00] sticky top-0">
+          <tr>
+            <th class="p-3">FECHA</th>
+            <th class="p-3">RATING</th>
+            <th class="p-3">COMENTARIO</th>
+            <th class="p-3">ESTADO</th>
+            <th class="p-3 text-right">OPERACIÓN TÁCTICA</th>
+          </tr>
+        </thead>
+        <tbody id="telemetry-table">
+          <!-- JS inyectará las filas de la base de datos aquí -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- ⚙️ SCRIPTS DEL BÚNKER (AISLADOS)           -->
+  <!-- ========================================== -->
+  <script>
+    const API_URL = 'https://libreqr-studios-back.onrender.com/api'; // Su servidor de combate
+    let secretKey = '';
+
+    // Nodos del DOM
+    const loginScreen = document.getElementById('login-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
+    const inputKey = document.getElementById('admin-key');
+    const btnLogin = document.getElementById('btn-login');
+    const tableBody = document.getElementById('telemetry-table');
+    const errorMsg = document.getElementById('login-error');
+
+    // === 1. PROTOCOLO DE INGRESO ===
+    btnLogin.addEventListener('click', async () => {
+      secretKey = inputKey.value.trim();
+      if(!secretKey) return;
+      
+      btnLogin.innerText = "VERIFICANDO...";
+      
+      // Intentar obtener los datos. Si la clave es correcta, el backend responderá.
+      try {
+        const response = await fetch(`${API_URL}/admin/feedback`, {
+          method: 'GET',
+          headers: { 'x-admin-key': secretKey }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Acceso concedido
+          loginScreen.classList.add('hidden');
+          dashboardScreen.classList.remove('hidden');
+          dashboardScreen.classList.add('flex');
+          renderTable(data.reviews);
+        } else {
+          // Acceso denegado
+          errorMsg.classList.remove('hidden');
+          btnLogin.innerText = "INICIAR SESIÓN CLANDESTINA";
+        }
+      } catch (err) {
+        alert("🔴 FALLA DE ENLACE: No se pudo contactar con Render.");
+        btnLogin.innerText = "INICIAR SESIÓN CLANDESTINA";
+      }
+    });
+
+    // Permitir "Enter" para el login
+    inputKey.addEventListener('keypress', (e) => { if(e.key === 'Enter') btnLogin.click(); });
+
+    // === 2. MOTOR DE RENDERIZADO DE TABLA ===
+    function renderTable(reviews) {
+      tableBody.innerHTML = '';
+      if(reviews.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-6 opacity-50">Sin telemetría en el radar.</td></tr>`;
+        return;
+      }
+
+      reviews.forEach(rev => {
+        const date = new Date(rev.createdAt).toLocaleString('es-AR');
+        const emojis = ['🤬', '🙁', '😐', '😊', '🚀'];
+        const emoji = emojis[rev.rating - 1] || '🚀';
+        
+        // Banderas de estado visual
+        const statusBadge = rev.isPublic 
+          ? `<span class="bg-green-900 text-green-300 px-2 py-1 rounded text-xs">PÚBLICO</span>` 
+          : `<span class="bg-red-900 text-red-300 px-2 py-1 rounded text-xs border border-red-500">OCULTO</span>`;
+
+        // Alertas de SPAM
+        const spamFlag = rev.isSpam ? `<span class="ml-2 blink text-red-500" title="Posible SPAM">🚩</span>` : '';
+
+        const row = `
+          <tr class="border-b border-[#002200] hover:bg-[#001100]">
+            <td class="p-3 opacity-80 text-xs">${date}</td>
+            <td class="p-3 text-xl">${emoji}</td>
+            <td class="p-3 text-gray-300 text-xs max-w-xs truncate" title="${rev.comment || 'Sin texto'}">${rev.comment || '<i>Silencioso</i>'}${spamFlag}</td>
+            <td class="p-3">${statusBadge}</td>
+            <td class="p-3 text-right">
+              <button onclick="toggleVisibility('${rev._id}', ${!rev.isPublic})" class="btn-action text-yellow-500 mr-2" title="Ocultar/Mostrar en Frontend">
+                ${rev.isPublic ? '👁️ Ocultar' : '🟢 Mostrar'}
+              </button>
+              <button onclick="purgeData('${rev._id}')" class="btn-action text-red-500" title="Eliminar de la Bóveda">
+                🗑️ Purgar
+              </button>
+            </td>
+          </tr>
+        `;
+        tableBody.insertAdjacentHTML('beforeend', row);
+      });
+    }
+
+    // === 3. ACCIÓN TÁCTICA: CAMBIAR VISIBILIDAD (PUT) ===
+    window.toggleVisibility = async (id, makePublic) => {
+      try {
+        const res = await fetch(`${API_URL}/admin/feedback/${id}/visibility`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            'x-admin-key': secretKey 
+          },
+          body: JSON.stringify({ isPublic: makePublic })
+        });
+        
+        if(res.ok) reloadData();
+        else alert("🔴 Error al cambiar estado.");
+      } catch (e) { console.error(e); }
+    };
+
+    // === 4. ACCIÓN TÁCTICA: PURGAR (DELETE) ===
+    window.purgeData = async (id) => {
+      if(!confirm("⚠️ ¿Autoriza la destrucción irreversible de esta telemetría?")) return;
+      
+      try {
+        const res = await fetch(`${API_URL}/admin/feedback/${id}`, {
+          method: 'DELETE',
+          headers: { 'x-admin-key': secretKey }
+        });
+        
+        if(res.ok) reloadData();
+        else alert("🔴 Error al ejecutar purga.");
+      } catch (e) { console.error(e); }
+    };
+
+    // === 5. RECARGA SILENCIOSA DE DATOS ===
+    async function reloadData() {
+      const res = await fetch(`${API_URL}/admin/feedback`, { headers: { 'x-admin-key': secretKey } });
+      if(res.ok) {
+        const data = await res.json();
+        renderTable(data.reviews);
+      }
+    }
+
+    // === 6. PROTOCOLO DE SALIDA ===
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      secretKey = '';
+      tableBody.innerHTML = '';
+      dashboardScreen.classList.add('hidden');
+      dashboardScreen.classList.remove('flex');
+      loginScreen.classList.remove('hidden');
+      inputKey.value = '';
+    });
+  </script>
+</body>
+</html>
