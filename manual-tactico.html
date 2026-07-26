@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MANUAL TÁCTICO DE OPERACIONES | LibreQR Studios</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap');
+    body {
+      background-color: #050505;
+      color: #00FF00;
+      font-family: 'Fira Code', monospace;
+    }
+    .neon-border { border: 1px solid #00FF00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); }
+    .neon-text { text-shadow: 0 0 5px #00FF00; }
+
+    /* 🖨️ ESTILOS EXCLUSIVOS PARA EXPORTACIÓN A PDF / IMPRESIÓN */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-family: Arial, sans-serif !important;
+        padding: 0 !important;
+      }
+      .no-print { display: none !important; }
+      .print-card {
+        border: 1px solid #cccccc !important;
+        box-shadow: none !important;
+        background-color: #f9f9f9 !important;
+        color: #000000 !important;
+        page-break-inside: avoid;
+      }
+      h1, h2, h3, strong { color: #000000 !important; text-shadow: none !important; }
+      .text-gray-400, .text-gray-300 { color: #333333 !important; }
+      .bg-[#0a0a0a], .bg-black, .bg-[#001100] { background-color: #ffffff !important; }
+      .border-[#00FF00], .border-[#003300] { border-color: #666666 !important; }
+    }
+  </style>
+</head>
+<body class="p-6 md:p-12 max-w-5xl mx-auto">
+
+  <!-- BOTÓN DE IMPRESIÓN / PDF (Oculto en PDF) -->
+  <div class="no-print flex justify-between items-center mb-8 border-b border-[#003300] pb-4">
+    <a href="/" class="text-xs border border-[#00FF00] px-3 py-2 text-[#00FF00] hover:bg-[#00FF00] hover:text-black transition-colors">
+      ◄ VOLVER AL GENERADOR
+    </a>
+    <button onclick="window.print()" class="bg-[#003300] border border-[#00FF00] text-[#00FF00] font-bold px-5 py-2 hover:bg-[#00FF00] hover:text-black transition-colors shadow-[0_0_10px_rgba(0,255,0,0.3)]">
+      🖨️ EXPORTAR / GUARDAR COMO PDF
+    </button>
+  </div>
+
+  <!-- ENCABEZADO TÁCTICO -->
+  <header class="text-center mb-10 pb-6 border-b border-[#00FF00]">
+    <span class="text-xs tracking-widest text-[#00FF00] font-bold uppercase">>_ LIBREQR STUDIOS — DOCUMENTO DE INTELIGENCIA</span>
+    <h1 class="text-3xl md:text-4xl font-bold mt-2 neon-text">MANUAL TÁCTICO DE OPERACIONES QR</h1>
+    <p class="text-xs text-gray-400 mt-2">Guía Estándar para Generación, Despliegue e Impresión Cero-Fallas</p>
+  </header>
+
+  <!-- SECCIÓN 1: PROTOCOLO DE PRIVACIDAD -->
+  <section class="mb-8 p-6 bg-[#0a0a0a] border border-[#003300] rounded print-card">
+    <h2 class="text-xl font-bold text-[#00FF00] mb-3 uppercase">>_ 1. PROTOCOLO DE RETENCIÓN CERO (PRIVACIDAD)</h2>
+    <p class="text-xs text-gray-300 leading-relaxed mb-3">
+      LibreQR Studios opera bajo arquitectura de procesamiento local. Cuando un usuario genera un código QR, el motor en JavaScript empaqueta la información directamente en la memoria volátil del navegador. 
+    </p>
+    <ul class="list-disc list-inside text-xs text-gray-400 space-y-1">
+      <li><strong>Cero Rastreo:</strong> No almacenamos enlaces, textos ni credenciales en bases de datos externas.</li>
+      <li><strong>Cero Intermediarios:</strong> El contenido impreso en el QR apunta directamente al destino sin redirecciones.</li>
+    </ul>
+  </section>
+
+  <!-- SECCIÓN 2: GUÍA DE FORMATOS -->
+  <section class="mb-8 p-6 bg-[#0a0a0a] border border-[#003300] rounded print-card">
+    <h2 class="text-xl font-bold text-[#00FF00] mb-4 uppercase">>_ 2. GUÍA DE MÓDULOS Y FORMATOS DE ENTRADA</h2>
+    
+    <div class="space-y-4 text-xs">
+      <div class="border-l-2 border-[#00FF00] pl-4 py-1">
+        <h3 class="font-bold text-white text-sm mb-1">🔗 A. Dirección Web (URL)</h3>
+        <p class="text-gray-400">Permite enlazar sitios web, redes sociales o menús digitales.</p>
+        <p class="text-gray-300 mt-1"><strong>Recomendación Táctica:</strong> Use siempre URLs completas incluyendo <code class="text-[#00FF00]">https://</code>. Si la URL es muy larga, use acortadores para reducir la densidad de los puntos del QR.</p>
+      </div>
+
+      <div class="border-l-2 border-[#00FF00] pl-4 py-1">
+        <h3 class="font-bold text-white text-sm mb-1">📶 B. Redes Wi-Fi Automáticas</h3>
+        <p class="text-gray-400">Permite a los usuarios conectarse a una red inalámbrica al escanear, sin escribir contraseñas.</p>
+        <p class="text-gray-300 mt-1"><strong>Protocolos Soportados:</strong> WPA/WPA2/WPA3 (Estándar recomendado), WEP o Redes Abiertas (sin clave).</p>
+      </div>
+
+      <div class="border-l-2 border-[#00FF00] pl-4 py-1">
+        <h3 class="font-bold text-white text-sm mb-1">📇 C. Tarjeta de Contacto (vCard 3.0)</h3>
+        <p class="text-gray-400">Inyecta nombre, teléfono, correo y empresa directamente en la agenda del smartphone.</p>
+        <p class="text-gray-300 mt-1"><strong>Regla de Oro:</strong> Ingrese solo datos esenciales. Demasiados caracteres crean un patrón denso que dificulta la lectura en cámaras de baja resolución.</p>
+      </div>
+
+      <div class="border-l-2 border-[#00FF00] pl-4 py-1">
+        <h3 class="font-bold text-white text-sm mb-1">🗺️ D. Geolocalización (Google Maps / Coordenadas)</h3>
+        <p class="text-gray-400">Abre aplicaciones de navegación GPS (Maps, Waze) directamente en la posición indicada.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3: CALIBRACIÓN VISUAL E IMPRESIÓN -->
+  <section class="mb-8 p-6 bg-[#0a0a0a] border border-[#003300] rounded print-card">
+    <h2 class="text-xl font-bold text-[#00FF00] mb-4 uppercase">>_ 3. CALIBRACIÓN VISUAL Y BUENAS PRÁCTICAS</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+      <div class="p-3 bg-black border border-[#003300] rounded">
+        <h4 class="font-bold text-[#00FF00] mb-2">👁️ Contraste Obligatorio</h4>
+        <p class="text-gray-400">
+          Los módulos (puntos) deben ser siempre <strong>más oscuros</strong> que el fondo. Evite fondos oscuros con puntos claros salvo que la cámara del dispositivo soporte inversión de color.
+        </p>
+      </div>
+
+      <div class="p-3 bg-black border border-[#003300] rounded">
+        <h4 class="font-bold text-[#00FF00] mb-2">📐 Margen de Respeto (Quiet Zone)</h4>
+        <p class="text-gray-400">
+          Deje un espacio en blanco equivalente a 4 módulos alrededor del código QR en impresiones físicas para evitar distorsión con bordes gráficos.
+        </p>
+      </div>
+
+      <div class="p-3 bg-black border border-[#003300] rounded">
+        <h4 class="font-bold text-[#00FF00] mb-2">🖼️ Inserción de Logos</h4>
+        <p class="text-gray-400">
+          Utilice archivos PNG con fondo transparente. No supere el 30% del tamaño total del código para no saturar el sistema de Corrección de Errores (ECC).
+        </p>
+      </div>
+
+      <div class="p-3 bg-black border border-[#003300] rounded">
+        <h4 class="font-bold text-[#00FF00] mb-2">📐 Resolución de Exportación</h4>
+        <p class="text-gray-400">
+          Use exportación <strong>1024px o 2048px (HD/4K)</strong> para impresiones en banners, carteles o afiches gigantes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="text-center text-[10px] text-gray-500 border-t border-[#003300] pt-4 mt-8">
+    <p>Documento de Operaciones Oficial | LibreQR Studios — Buenos Aires, Argentina</p>
+  </footer>
+
+</body>
+</html>
