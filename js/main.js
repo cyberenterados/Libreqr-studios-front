@@ -12,8 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const typeButtons = document.querySelectorAll('#type-selector button');
   
   // === ENLACE DE COMUNICACIÓN CON EL BÚNKER (API) ===
-  // Cambie localhost por su enlace de Render cuando pase a producción
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = 'https://libreqr-studios-back.onrender.com/api';
   
   // === INICIALIZAR FORMULARIO POR DEFECTO ===
   renderFormInputs('url');
