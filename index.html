@@ -79,19 +79,21 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- NÚCLEO CENTRAL Y LATERALES (GRID 4 COLUMNAS) -->
+  <!-- 🗺️ ZONA DE DESPLIEGUE: CUADRÍCULA TÁCTICA  -->
   <!-- ========================================== -->
-  <!-- En Móvil: 1 Columna (App -> Ad Izq -> Ad Der) | En PC: 4 Columnas (Ad Izq -> App [x2] -> Ad Der) -->
-  <main class="w-full max-w-[1400px] grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+  <div class="w-full max-w-[1400px] mx-auto flex flex-row justify-center items-start gap-6 mb-8">
     
-    <!-- 📢 BANNER 2: SIDEBAR IZQUIERDA -->
-    <aside class="order-2 lg:order-1 col-span-1 min-h-[300px] lg:min-h-[600px] flex items-center justify-center border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group">
+    <!-- 🗼 FLANCO IZQUIERDO: TORRE DE TELEMETRÍA (Slot 3) -->
+    <aside class="hidden xl:flex flex-col w-[160px] min-h-[600px] border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group shadow-[0_0_12px_rgba(0,255,0,0.1)]">
       <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
-      <span class="text-xs opacity-50 tracking-widest text-center rotate-0 lg:-rotate-90">[ AD_SERVER_LEFT ]</span>
+      <div class="absolute -top-3 left-2 bg-black px-2 text-[#00FF00] font-mono text-[10px] tracking-widest z-20">[NODO_IZQ]</div>
+      <div id="ad-sidebar-left" class="w-full h-full flex items-center justify-center text-center p-2 text-[#00FF00] opacity-50 font-mono text-xs z-10">
+        [ AD_SERVER_LEFT ]
+      </div>
     </aside>
 
-    <!-- ⚙️ PANEL CENTRAL: LA APLICACIÓN (Ocupa 2 columnas en PC) -->
-    <div class="order-1 lg:order-2 col-span-1 lg:col-span-2 flex flex-col gap-6">
+    <!-- ☢️ NÚCLEO CENTRAL: LA APLICACIÓN -->
+    <main class="flex-1 w-full max-w-[800px] flex flex-col gap-6">
       
       <!-- FASE 1: ENTRADA DE DATOS -->
       <section id="input-zone" class="p-6 bg-[#0a0a0a] border border-[#00FF00] shadow-[0_0_10px_rgba(0,255,0,0.2)] rounded flex flex-col gap-6">
@@ -182,15 +184,18 @@
         </div>
       </section>
 
-    </div>
+    </main>
 
-    <!-- 📢 BANNER 3: SIDEBAR DERECHA -->
-    <aside class="order-3 lg:order-3 col-span-1 min-h-[300px] lg:min-h-[600px] flex items-center justify-center border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group">
+    <!-- 🗼 FLANCO DERECHO: TORRE DE TELEMETRÍA (Slot 4) -->
+    <aside class="hidden xl:flex flex-col w-[160px] min-h-[600px] border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group shadow-[0_0_12px_rgba(0,255,0,0.1)]">
       <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
-      <span class="text-xs opacity-50 tracking-widest text-center rotate-0 lg:-rotate-90">[ AD_SERVER_RIGHT ]</span>
+      <div class="absolute -top-3 right-2 bg-black px-2 text-[#00FF00] font-mono text-[10px] tracking-widest z-20">[NODO_DER]</div>
+      <div id="ad-sidebar-right" class="w-full h-full flex items-center justify-center text-center p-2 text-[#00FF00] opacity-50 font-mono text-xs z-10">
+        [ AD_SERVER_RIGHT ]
+      </div>
     </aside>
 
-  </main>
+  </div>
 
   <!-- ========================================== -->
   <!-- 📢 BANNER 4: BOTTOM / ABAJO DEL NÚCLEO       -->
@@ -209,25 +214,25 @@
   </article>
 
   <!-- ========================================== -->
-<!-- 🛡️ ESCUDO DE PRIVACIDAD CIVIL (RETENCIÓN CERO) -->
-<!-- ========================================== -->
-<div class="w-full max-w-4xl mx-auto my-8 p-4 bg-[#0a0a0a] border border-[#003300] rounded-lg shadow-[0_0_15px_rgba(0,255,0,0.15)] flex flex-col md:flex-row items-center gap-4 transition-all hover:border-[#00FF00]">
-  <div class="flex-shrink-0 text-3xl p-3 bg-black border border-[#003300] rounded text-[#00FF00] shadow-[0_0_8px_rgba(0,255,0,0.3)]">
-    🛡️
-  </div>
-  <div class="text-left font-mono">
-    <div class="flex items-center gap-2 mb-1">
-      <span class="text-xs font-bold text-[#00FF00] uppercase tracking-wider">>_ PROTOCOLO DE RETENCIÓN CERO</span>
-      <span class="bg-[#002200] text-[#00FF00] text-[10px] px-2 py-0.5 rounded border border-[#00FF00] animate-pulse">
-        CIVIL SAFE
-      </span>
+  <!-- 🛡️ ESCUDO DE PRIVACIDAD CIVIL (RETENCIÓN CERO) -->
+  <!-- ========================================== -->
+  <div class="w-full max-w-4xl mx-auto my-8 p-4 bg-[#0a0a0a] border border-[#003300] rounded-lg shadow-[0_0_15px_rgba(0,255,0,0.15)] flex flex-col md:flex-row items-center gap-4 transition-all hover:border-[#00FF00]">
+    <div class="flex-shrink-0 text-3xl p-3 bg-black border border-[#003300] rounded text-[#00FF00] shadow-[0_0_8px_rgba(0,255,0,0.3)]">
+      🛡️
     </div>
-    <p class="text-xs text-gray-400 leading-relaxed">
-      Sus datos están blindados. LibreQR Studios procesa los códigos QR directamente en la memoria local de su navegador. 
-      <strong class="text-gray-200">No rastreamos, no almacenamos y no compartimos</strong> sus URLs, textos, claves WiFi ni tarjetas de contacto en nuestras bases de datos.
-    </p>
+    <div class="text-left font-mono">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-bold text-[#00FF00] uppercase tracking-wider">>_ PROTOCOLO DE RETENCIÓN CERO</span>
+        <span class="bg-[#002200] text-[#00FF00] text-[10px] px-2 py-0.5 rounded border border-[#00FF00] animate-pulse">
+          CIVIL SAFE
+        </span>
+      </div>
+      <p class="text-xs text-gray-400 leading-relaxed">
+        Sus datos están blindados. LibreQR Studios procesa los códigos QR directamente en la memoria local de su navegador. 
+        <strong class="text-gray-200">No rastreamos, no almacenamos y no compartimos</strong> sus URLs, textos, claves WiFi ni tarjetas de contacto en nuestras bases de datos.
+      </p>
+    </div>
   </div>
-</div>
 
   <!-- ========================================== -->
   <!-- BÚNKER FOOTER: 2 HEMISFERIOS TÁCTICOS      -->
@@ -339,14 +344,15 @@
   <!-- Scripts -->
 
   <!-- BATERÍA PUBLICITARIA MODULAR (FASE 3) -->
-<script src="js/ads/banner-top.js"></script>
-<script src="js/ads/banner-side.js"></script>
-<script src="js/ads/banner-mid.js"></script>
-<script src="js/ads/banner-bottom.js"></script>
-<script src="js/ads/intercept-download.js"></script>
-<script src="js/ads/adManager.js"></script>
+  <script src="js/ads/banner-top.js"></script>
+  <script src="js/ads/banner-left.js"></script>
+  <script src="js/ads/banner-right.js"></script>
+  <script src="js/ads/banner-bottom.js"></script>
+  <script src="js/ads/intercept-download.js"></script>
+  <script src="js/ads/adManager.js"></script>
 
-<script src="js/main.js"></script>
+  <script src="js/main.js"></script>
 
 </body>
 </html>
+
