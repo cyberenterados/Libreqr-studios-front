@@ -1,24 +1,28 @@
 // ==========================================
-// 🛡️ BATERÍA PUBLICITARIA: SLOT 1 (CABECERA)
+// 📢 BANNER TOP (728x90) ADSTERRA
 // ==========================================
-const BannerTop = {
-  slotId: 'ad-slot-top',
-
-  init() {
-    const container = document.getElementById(this.slotId);
-    if (!container) return;
-
-    // INYECCIÓN DE MUNICIÓN REAL: A-Ads (Bloque #2449491 - Adaptable)
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById('ad-banner-top');
+  if (container) {
+    // Inyectamos el iframe aislado
     container.innerHTML = `
-      <!-- BEGIN AADS AD UNIT 2449491 -->
-      <div style="width: 100%; margin: auto; position: relative; z-index: 10;">
-        <iframe data-aa='2449491' src='//acceptable.a-ads.com/2449491/?size=Adaptive'
-                style='border:0; padding:0; width:100%; height:auto; min-height:90px; overflow:hidden; display:block; margin:auto;'>
-        </iframe>
-      </div>
-      <!-- END AADS AD UNIT 2449491 -->
+      <iframe srcdoc="
+        <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
+          <script>
+            atOptions = {
+              'key' : 'fb4441ee10a2b52843e9600d293de6f1',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+          </script>
+          <script src='https://www.highperformanceformat.com/fb4441ee10a2b52843e9600d293de6f1/invoke.js'></script>
+        </body></html>
+      " style="width:728px; height:90px; border:none; overflow:hidden;"></iframe>
     `;
-    
-    console.log("🟢 [ADS] Slot 1 (Top) desplegado y armado con A-Ads.");
+    // Apagamos los bordes punteados para que el banner luzca limpio
+    container.classList.remove('border', 'border-dashed');
   }
-};
+});
+
