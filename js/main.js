@@ -92,17 +92,34 @@ document.addEventListener('DOMContentLoaded', () => {
     return null;
   }
 
-  // === FLUJO DE GENERACIÓN (BOTÓN PRINCIPAL) ===
-  document.getElementById('btn-generate').addEventListener('click', () => {
+  // === ZONA 2: PEAJE INICIAL (BOTÓN GENERAR) ===
+  document.getElementById('btn-generate').addEventListener('click', async () => {
     currentPayload = extractPayload();
     if (!currentPayload) return;
 
+    // 1. FRENAR Y VERIFICAR ESCUDO DE ANUNCIOS (ANTI-ADBLOCKER)
+    try {
+      if (typeof AntiBlockManager !== 'undefined') {
+        const isAdBlockerPresent = await AntiBlockManager.isAdBlockActive();
+        if (isAdBlockerPresent) {
+          // Bloquear acceso y mostrar la Alerta Roja
+          AntiBlockManager.showWarningModal();
+          return; // Abortar generación de QR
+        }
+      }
+    } catch (e) {
+      console.warn("⚠️ Radar Anti-AdBlock offline. Permitiendo paso...");
+    }
+
+    console.log("🟢 Conexión limpia (AdBlock Desactivado). Generando QR...");
+
+    // 2. SI ESTÁ LIMPIO -> CONTINUAR FLUJO NORMAL
     const modalAd = document.getElementById('modal-ad');
     const adZone = document.getElementById('ad-zone');
     const adCountdown = document.getElementById('ad-countdown');
     const downloadZone = document.getElementById('download-zone'); // Del modal viejo, lo ocultamos
 
-    // 1. Mostrar anuncio interstitial
+    // Mostrar anuncio interstitial
     modalAd.classList.remove('hidden');
     adZone.classList.remove('hidden');
     if (downloadZone) downloadZone.classList.add('hidden');
@@ -117,11 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timer);
         modalAd.classList.add('hidden'); // Cierra publicidad
         
-        // 2. Transición a Estación de Diseño
+        // Transición a Estación de Diseño (ZONA 3)
         inputZone.classList.add('hidden');
         customZone.classList.remove('hidden');
         
-        // 3. Renderizar Canvas en vivo
+        // Renderizar Canvas en vivo
         initLiveCanvas(currentPayload);
       }
     }, 1000);
@@ -145,12 +162,21 @@ document.addEventListener('DOMContentLoaded', () => {
     qrEngine.append(previewContainer);
   }
 
-  // === CONTROLES DE DISEÑO EN VIVO ===
+  // === ZONA 3: ESTACIÓN DE DISEÑO Y DIRECT LINKS ===
+
+  // Función comodín para los Direct Links (Se conectará luego con el AdManager)
+  function tryTriggerDirectLink() {
+    if (typeof triggerAdsterraDirectLink === 'function') {
+      triggerAdsterraDirectLink();
+    }
+  }
 
   // 1. Chips de Color
   const colorChips = document.querySelectorAll('.color-chip');
   colorChips.forEach(chip => {
     chip.addEventListener('click', (e) => {
+      tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
+
       // Efecto visual activo
       colorChips.forEach(c => c.classList.remove('ring-2', 'ring-[#00FF00]'));
       chip.classList.add('ring-2', 'ring-[#00FF00]');
@@ -171,6 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const shapeBtns = document.querySelectorAll('.shape-btn');
   shapeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+      tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
+
       shapeBtns.forEach(b => {
         b.classList.remove('bg-[#00FF00]', 'text-black', 'font-bold');
       });
@@ -219,6 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // === DESCARGA EN ALTA RESOLUCIÓN HD/4K + TELEMETRÍA DE CONTEO (+1) ===
   function executeDownload(extension) {
     if (!qrEngine) return;
+    
+    tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
+
     const size = parseInt(document.getElementById('download-resolution').value);
     
     // Configurar temporalmente el tamaño gigante en memoria para exportar
@@ -353,3 +384,4 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ejecutar el radar al iniciar la web
   loadPublicFeedback();
 });
+

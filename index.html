@@ -353,6 +353,40 @@
 
   <script src="js/main.js"></script>
 
+  <!-- ========================================== -->
+  <!-- MODAL 3: SISTEMA ANTI-ADBLOCK (ALERTA RED) -->
+  <!-- ========================================== -->
+  <div id="modal-antiblock" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col items-center justify-center p-4">
+    <div class="bg-[#050505] border-2 border-red-600 p-6 md:p-8 max-w-lg w-full text-center shadow-[0_0_30px_rgba(255,0,0,0.4)] rounded relative">
+      
+      <!-- Indicador Táctico superior -->
+      <div class="inline-block bg-red-950 text-red-500 border border-red-600 text-[10px] px-3 py-1 font-mono uppercase tracking-widest rounded mb-4 animate-pulse">
+        🚨 ESCUDO ENEMIGO DETECTADO
+      </div>
+
+      <h3 class="text-xl md:text-2xl font-bold text-red-500 font-mono mb-2">ALERTA DE SEGURIDAD</h3>
+      <p class="text-xs md:text-sm text-gray-300 font-mono mb-6 leading-relaxed">
+        Detectamos un bloqueador de anuncios (<strong class="text-white">AdBlocker / Brave Shield</strong>) activo en su navegador.
+      </p>
+
+      <!-- Panel informativo estilo terminal -->
+      <div class="bg-[#0a0a0a] border border-red-900/50 p-4 rounded text-left font-mono text-xs text-gray-400 mb-6 space-y-2">
+        <p class="text-[#00FF00] font-bold">>_ POR QUÉ OCURRE ESTO:</p>
+        <p>LibreQR Studios es 100% libre, sin registros ni venta de datos civiles. Nos financiamos exclusivamente mediante impresiones publicitarias pasivas.</p>
+        <p class="text-red-400 font-bold mt-2">>_ PASOS PARA CONTINUAR:</p>
+        <ol class="list-decimal list-inside space-y-1 text-gray-300">
+          <li>Pause su bloqueador para <span class="text-white font-bold">libreqrstudios.vercel.app</span></li>
+          <li>Presione el botón de reescaneo inferior.</li>
+        </ol>
+      </div>
+
+      <button id="btn-retry-antiblock" class="w-full border border-[#00FF00] bg-[#002200] text-[#00FF00] font-bold font-mono py-3 rounded hover:bg-[#00FF00] hover:text-black transition-all shadow-[0_0_15px_rgba(0,255,0,0.3)]">
+        🔄 REINTENTAR ESCANEO DE BÚNKER
+      </button>
+
+    </div>
+  </div>
+
 </body>
 </html>
 
