@@ -84,11 +84,11 @@
   <div class="w-full max-w-[1400px] mx-auto flex flex-row justify-center items-start gap-6 mb-8">
     
     <!-- 🗼 FLANCO IZQUIERDO: TORRE DE TELEMETRÍA (Slot 3) -->
-    <aside class="hidden xl:flex flex-col w-[160px] min-h-[600px] border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group shadow-[0_0_12px_rgba(0,255,0,0.1)]">
+    <aside class="hidden xl:flex flex-col w-[160px] min-h-[600px] border border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group shadow-[0_0_12px_rgba(0,255,0,0.1)]">
       <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
       <div class="absolute -top-3 left-2 bg-black px-2 text-[#00FF00] font-mono text-[10px] tracking-widest z-20">[NODO_IZQ]</div>
-      <div id="ad-sidebar-left" class="w-full h-full flex items-center justify-center text-center p-2 text-[#00FF00] opacity-50 font-mono text-xs z-10">
-        [ AD_SERVER_LEFT ]
+      <div id="ad-sidebar-left" class="w-full h-full flex flex-col items-center justify-start text-center p-0 z-10">
+        <!-- El JS inyectará el banner 160x600 aquí -->
       </div>
     </aside>
 
@@ -168,6 +168,10 @@
             <!-- El motor JS inyectará el Canvas aquí -->
           </div>
           
+          <p class="text-[11px] opacity-60 text-center font-mono mt-3 text-gray-400">
+            ℹ️ <strong class="text-[#00FF00]">NOTA OPERATIVA:</strong> LibreQR es 100% libre y privado. Para financiar los servidores sin cobrar suscripciones, se desplegarán pestañas patrocinadas (Máx 2 impresiones) durante la personalización. ¡Gracias por apoyar la base!
+          </p>
+          
           <div class="w-full mt-6">
             <label class="block text-xs text-center mb-2 opacity-80">📐 SELECCIONA RESOLUCIÓN</label>
             <select id="download-resolution" class="w-full p-2 bg-black border border-[#00FF00] text-[#00FF00] outline-none font-mono text-sm mb-4 rounded cursor-pointer">
@@ -187,11 +191,11 @@
     </main>
 
     <!-- 🗼 FLANCO DERECHO: TORRE DE TELEMETRÍA (Slot 4) -->
-    <aside class="hidden xl:flex flex-col w-[160px] min-h-[600px] border border-dashed border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group shadow-[0_0_12px_rgba(0,255,0,0.1)]">
+    <aside class="hidden xl:flex flex-col w-[160px] min-h-[600px] border border-[#00FF00] bg-[#0a0a0a] relative overflow-hidden group shadow-[0_0_12px_rgba(0,255,0,0.1)]">
       <div class="absolute inset-0 bg-[#00FF00] opacity-5 group-hover:opacity-10 transition-opacity"></div>
       <div class="absolute -top-3 right-2 bg-black px-2 text-[#00FF00] font-mono text-[10px] tracking-widest z-20">[NODO_DER]</div>
-      <div id="ad-sidebar-right" class="w-full h-full flex items-center justify-center text-center p-2 text-[#00FF00] opacity-50 font-mono text-xs z-10">
-        [ AD_SERVER_RIGHT ]
+      <div id="ad-sidebar-right" class="w-full h-full flex flex-col items-center justify-start text-center p-0 z-10">
+        <!-- El JS inyectará el banner 160x600 aquí -->
       </div>
     </aside>
 
@@ -301,16 +305,32 @@
   <!-- MODALES DE OPERACIÓN CLANDESTINA           -->
   <!-- ========================================== -->
 
-  <!-- MODAL 1: ANUNCIO INTERSTITIAL -->
+  <!-- MODAL 1: ANUNCIO INTERSTITIAL (PEAJE INICIAL) -->
   <div id="modal-ad" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex flex-col items-center justify-center p-4">
-    <div class="bg-[#050505] border border-[#00FF00] p-8 max-w-lg w-full text-center shadow-[0_0_20px_rgba(0,255,0,0.3)] rounded">
-      <div id="ad-zone" class="mb-6">
-        <h3 class="text-xl font-bold mb-2 animate-pulse">>_ PROCESANDO QR</h3>
-        <p class="text-sm mb-4 opacity-80">Su código está encriptándose. Verá un anuncio para financiar el servidor libre.</p>
-        <div class="w-full h-[250px] mb-4 bg-[#0a0a0a] border border-dashed border-[#00FF00] flex items-center justify-center text-xs opacity-50">
-          [ VIDEO AD / REWARDED CARGANDO... ]
+    <div class="bg-[#050505] border border-[#00FF00] p-6 max-w-lg w-full text-center shadow-[0_0_20px_rgba(0,255,0,0.3)] rounded">
+      <div id="ad-zone" class="mb-4 flex flex-col items-center justify-center">
+        <h3 class="text-xl font-bold mb-1 animate-pulse font-mono text-[#00FF00]">>_ PROCESANDO QR</h3>
+        <p class="text-xs mb-3 opacity-80 font-mono text-gray-300">Su código está encriptándose. Financiando el servidor libre.</p>
+        
+        <!-- 🎯 BANNER 300x250 AISLADO EN IFRAME -->
+        <div class="w-[300px] h-[250px] mx-auto bg-black border border-[#003300] flex items-center justify-center overflow-hidden my-2 rounded">
+          <iframe srcdoc="
+            <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
+              <script>
+                atOptions = {
+                  'key' : 'd8843124e0f9be2fc59decdcdfa56387',
+                  'format' : 'iframe',
+                  'height' : 250,
+                  'width' : 300,
+                  'params' : {}
+                };
+              </script>
+              <script src='https://www.highperformanceformat.com/d8843124e0f9be2fc59decdcdfa56387/invoke.js'></script>
+            </body></html>
+          " class="w-[300px] h-[250px] border-none overflow-hidden"></iframe>
         </div>
-        <p class="text-3xl font-bold font-mono neon-text" id="ad-countdown">05</p>
+
+        <p class="text-3xl font-bold font-mono neon-text mt-2" id="ad-countdown">05</p>
       </div>
     </div>
   </div>
@@ -338,19 +358,15 @@
       </div>
 
     </div>
-    
   </div>
 
   <!-- Scripts -->
-
-  <!-- BATERÍA PUBLICITARIA MODULAR (FASE 3) -->
+  <script src="js/ads/antiblock.js"></script>
   <script src="js/ads/banner-top.js"></script>
   <script src="js/ads/banner-left.js"></script>
   <script src="js/ads/banner-right.js"></script>
   <script src="js/ads/banner-bottom.js"></script>
-  <script src="js/ads/intercept-download.js"></script>
   <script src="js/ads/adManager.js"></script>
-
   <script src="js/main.js"></script>
 
   <!-- ========================================== -->
@@ -358,18 +374,13 @@
   <!-- ========================================== -->
   <div id="modal-antiblock" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col items-center justify-center p-4">
     <div class="bg-[#050505] border-2 border-red-600 p-6 md:p-8 max-w-lg w-full text-center shadow-[0_0_30px_rgba(255,0,0,0.4)] rounded relative">
-      
-      <!-- Indicador Táctico superior -->
       <div class="inline-block bg-red-950 text-red-500 border border-red-600 text-[10px] px-3 py-1 font-mono uppercase tracking-widest rounded mb-4 animate-pulse">
         🚨 ESCUDO ENEMIGO DETECTADO
       </div>
-
       <h3 class="text-xl md:text-2xl font-bold text-red-500 font-mono mb-2">ALERTA DE SEGURIDAD</h3>
       <p class="text-xs md:text-sm text-gray-300 font-mono mb-6 leading-relaxed">
         Detectamos un bloqueador de anuncios (<strong class="text-white">AdBlocker / Brave Shield</strong>) activo en su navegador.
       </p>
-
-      <!-- Panel informativo estilo terminal -->
       <div class="bg-[#0a0a0a] border border-red-900/50 p-4 rounded text-left font-mono text-xs text-gray-400 mb-6 space-y-2">
         <p class="text-[#00FF00] font-bold">>_ POR QUÉ OCURRE ESTO:</p>
         <p>LibreQR Studios es 100% libre, sin registros ni venta de datos civiles. Nos financiamos exclusivamente mediante impresiones publicitarias pasivas.</p>
@@ -379,11 +390,9 @@
           <li>Presione el botón de reescaneo inferior.</li>
         </ol>
       </div>
-
       <button id="btn-retry-antiblock" class="w-full border border-[#00FF00] bg-[#002200] text-[#00FF00] font-bold font-mono py-3 rounded hover:bg-[#00FF00] hover:text-black transition-all shadow-[0_0_15px_rgba(0,255,0,0.3)]">
         🔄 REINTENTAR ESCANEO DE BÚNKER
       </button>
-
     </div>
   </div>
 

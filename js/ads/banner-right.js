@@ -1,11 +1,25 @@
 // ==========================================
-// 🗼 FLANCO DERECHO: BATERÍA A-ADS (SLOT 4 - SKYSCRAPER 160x600)
+// 🗼 FLANCO DERECHO: BANNER 160x300 ADSTERRA
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById('ad-sidebar-right');
   if (container) {
-    // AQUÍ INYECTAREMOS EL CÓDIGO DE A-ADS LUEGO
-    console.log("🟢 [ADS] Nodo Derecho listo para recibir munición.");
+    container.innerHTML = `
+      <iframe srcdoc="
+        <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
+          <script>
+            atOptions = {
+              'key' : '66462f3e9f2f0df3cc7aac33a01a2845',
+              'format' : 'iframe',
+              'height' : 300,
+              'width' : 160,
+              'params' : {}
+            };
+          </script>
+          <script src='https://www.highperformanceformat.com/66462f3e9f2f0df3cc7aac33a01a2845/invoke.js'></script>
+        </body></html>
+      " style="width:160px; height:300px; border:none; overflow:hidden;"></iframe>
+    `;
   }
 });
 
