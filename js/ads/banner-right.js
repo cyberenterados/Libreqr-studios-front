@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById('ad-sidebar-right');
   if (container) {
     container.innerHTML = `
-      <iframe srcdoc="
+      <iframe sandbox="allow-scripts allow-popups allow-same-origin" srcdoc="
         <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
           <script>
             atOptions = {

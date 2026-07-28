@@ -318,9 +318,9 @@
         <h3 class="text-xl font-bold mb-1 animate-pulse font-mono text-[#00FF00]">>_ PROCESANDO QR</h3>
         <p class="text-xs mb-3 opacity-80 font-mono text-gray-300">Su código está encriptándose. Financiando el servidor libre.</p>
         
-        <!-- 🎯 BANNER 300x250 AISLADO EN IFRAME -->
+        <!-- 🎯 BANNER 300x250 ENJAULADO (SANDBOX) -->
         <div class="w-[300px] h-[250px] mx-auto bg-black border border-[#003300] flex items-center justify-center overflow-hidden my-2 rounded">
-          <iframe srcdoc="
+          <iframe sandbox="allow-scripts allow-popups allow-same-origin" srcdoc="
             <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
               <script>
                 atOptions = {
