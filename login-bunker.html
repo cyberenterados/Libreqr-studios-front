@@ -105,18 +105,21 @@
   </main>
 
   <script>
-    // 1. Reloj del Sistema
+   // 1. Reloj del Sistema
     setInterval(() => {
       const timeBox = document.getElementById('sys-time');
       if(timeBox) timeBox.textContent = new Date().toLocaleTimeString('es-AR');
     }, 1000);
 
-    // 2. Lógica del Motor de Autenticación Visual
+    // 2. Lógica del Motor de Autenticación Visual (DOBLE CANDADO)
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-submit');
       const terminal = document.getElementById('terminal-output');
+      
+      // Captura de datos
       const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
       
       // Bloquear UI durante verificación
       btn.disabled = true;
@@ -134,7 +137,7 @@
         `>_ Cifrado de extremo a extremo: [OK]`,
         `>_ Evaluando credenciales de ID: ${user}`,
         `>_ Consultando base de datos en Buenos Aires...`,
-        `>_ Comprobando huella criptográfica...`
+        `>_ Comprobando huella criptográfica de Palabra Clave...`
       ];
 
       let i = 0;
@@ -152,14 +155,20 @@
           btn.classList.remove('opacity-50');
           btn.innerHTML = 'INICIAR SECUENCIA <span class="blink">_</span>';
           
-          // Si es usted, lo reconoce
-          if(user.toLowerCase() === 'manuexplora') {
+          // 🛡️ CONDICIÓN DE DOBLE CANDADO (ID + PASSWORD)
+          if(user.toLowerCase() === 'manuexplora' && pass === 'Cyber2026') {
+             
+             // Simulación de acceso concedido
              terminal.innerHTML += `<p class="text-[#00FF00] font-bold mt-2">>_ ✅ ACCESO CONCEDIDO, COMANDANTE.</p>`;
-             terminal.innerHTML += `<p class="text-yellow-400 mt-1">>_ ⚠️ ADVERTENCIA: Enlace API con panel de control offline. Construcción del backend en proceso.</p>`;
+             terminal.innerHTML += `<p class="text-yellow-400 mt-1">>_ Iniciando salto a la Sala de Mando...</p>`;
+             
+             // ¡TÚNEL ACTIVADO! Salta a la sala después de 2 segundos (2000ms)
+             setTimeout(() => { window.location.href = '/bunker-core.html'; }, 2000);
+             
           } else {
-             // Simulación de rechazo a intrusos
-             terminal.innerHTML += `<p class="text-red-500 font-bold mt-2">>_ 🔴 INTRUSO DETECTADO. ACCESO DENEGADO.</p>`;
-             terminal.innerHTML += `<p class="text-red-400 mt-1">>_ IP registrada y reportada a CyberEnterados.</p>`;
+             // Simulación de rechazo a intrusos (Falla usuario O falla clave)
+             terminal.innerHTML += `<p class="text-red-500 font-bold mt-2">>_ 🔴 INTRUSO DETECTADO. CREDENCIALES INVÁLIDAS.</p>`;
+             terminal.innerHTML += `<p class="text-red-400 mt-1">>_ IP registrada y reportada a los servidores de defensa.</p>`;
           }
           terminal.scrollTop = terminal.scrollHeight;
         }
