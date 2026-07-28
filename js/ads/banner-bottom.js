@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById('ad-banner-bottom');
   if (container) {
     // Inyectamos el iframe aislado
-    container.innerHTML = `
+    container.innerHTML += `
       <iframe srcdoc="
         <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
           <script>
@@ -19,10 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
           </script>
           <script src='https://www.highperformanceformat.com/fb4441ee10a2b52843e9600d293de6f1/invoke.js'></script>
         </body></html>
-      " style="width:728px; height:90px; border:none; overflow:hidden;"></iframe>
+      " style="width:728px; height:90px; border:none; overflow:hidden; position:relative; z-index:10;"></iframe>
     `;
-    // Apagamos los bordes punteados para que el banner luzca limpio
-    container.classList.remove('border', 'border-dashed');
   }
 });
 
