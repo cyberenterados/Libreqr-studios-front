@@ -5,20 +5,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById('ad-sidebar-right');
   if (container) {
     container.innerHTML = `
-      <iframe sandbox="allow-scripts allow-popups allow-same-origin" srcdoc="
-        <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
-          <script>
-            atOptions = {
-              'key' : '66462f3e9f2f0df3cc7aac33a01a2845',
-              'format' : 'iframe',
-              'height' : 300,
-              'width' : 160,
-              'params' : {}
-            };
-          </script>
-          <script src='https://www.highperformanceformat.com/66462f3e9f2f0df3cc7aac33a01a2845/invoke.js'></script>
-        </body></html>
-      " style="width:160px; height:300px; border:none; overflow:hidden;"></iframe>
+      <!-- BEGIN AADS AD UNIT 2449857 -->
+        <div id="frame" style="width: 100%;margin: auto;position: relative; z-index: 99998;">
+          <iframe data-aa='2449857' src='//acceptable.a-ads.com/2449857/?size=Adaptive'
+            style='border:0; padding:0; width:70%; height:auto; overflow:hidden;display: block;margin: auto'></iframe>
+        </div>
+      <!-- END AADS AD UNIT 2449857 -->
     `;
   }
 });

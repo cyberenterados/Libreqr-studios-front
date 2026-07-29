@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (container) {
     // Inyectamos el iframe aislado
     container.innerHTML += `
-      <iframe sandbox="allow-scripts allow-popups allow-same-origin" srcdoc="
+      <iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms" srcdoc="...
         <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
           <script>
             atOptions = {
