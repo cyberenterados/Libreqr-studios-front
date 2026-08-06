@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let qrEngine = null; // Instancia del generador
   let currentPayload = ''; // Datos del QR
   let isSpamFlagged = false;
+  
+  // Banderas para publicidad UX amigable (Solo saltan 1 vez por sesión)
+  let hasSeenColorAd = false;
+  let hasSeenShapeAd = false;
 
   // === ELEMENTOS DEL DOM ===
   const inputZone = document.getElementById('input-zone');
@@ -26,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active', 'bg-[#001100]');
       currentType = btn.dataset.type;
       renderFormInputs(currentType);
+      
+      // 🟢 TELEMETRÍA: CAMBIO DE FORMATO
+      if (typeof TelemetryEngine !== 'undefined') {
+        TelemetryEngine.trackEvent('SELECCIONAR_FORMATO', { formato: currentType });
+      }
     });
   });
 
@@ -97,14 +106,17 @@ document.addEventListener('DOMContentLoaded', () => {
     currentPayload = extractPayload();
     if (!currentPayload) return;
 
-    // 1. FRENAR Y VERIFICAR ESCUDO DE ANUNCIOS (ANTI-ADBLOCKER)
+    // 🟢 TELEMETRÍA: INTENTO DE GENERACIÓN
+    if (typeof TelemetryEngine !== 'undefined') {
+      TelemetryEngine.trackEvent('DISPARAR_GENERACION', { tipo: currentType });
+    }
+
     try {
       if (typeof AntiBlockManager !== 'undefined') {
         const isAdBlockerPresent = await AntiBlockManager.isAdBlockActive();
         if (isAdBlockerPresent) {
-          // Bloquear acceso y mostrar la Alerta Roja
           AntiBlockManager.showWarningModal();
-          return; // Abortar generación de QR
+          return;
         }
       }
     } catch (e) {
@@ -113,32 +125,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log("🟢 Conexión limpia (AdBlock Desactivado). Generando QR...");
 
-    // 2. SI ESTÁ LIMPIO -> CONTINUAR FLUJO NORMAL
     const modalAd = document.getElementById('modal-ad');
-    const adZone = document.getElementById('ad-zone');
     const adCountdown = document.getElementById('ad-countdown');
-    const downloadZone = document.getElementById('download-zone'); // Del modal viejo, lo ocultamos
 
-    // Mostrar anuncio interstitial
     modalAd.classList.remove('hidden');
-    adZone.classList.remove('hidden');
-    if (downloadZone) downloadZone.classList.add('hidden');
 
-    let seconds = 3; // Tiempo rápido para pruebas, en prod poner 5 o 10
-    adCountdown.textContent = `0${seconds}`;
+    let seconds = 10; // Tiempo de peaje
+    adCountdown.textContent = seconds < 10 ? `0${seconds}` : seconds;
 
     const timer = setInterval(() => {
       seconds--;
-      adCountdown.textContent = `0${seconds}`;
+      adCountdown.textContent = seconds < 10 ? `0${seconds}` : seconds;
       if (seconds <= 0) {
         clearInterval(timer);
-        modalAd.classList.add('hidden'); // Cierra publicidad
-        
-        // Transición a Estación de Diseño (ZONA 3)
+        modalAd.classList.add('hidden');
         inputZone.classList.add('hidden');
         customZone.classList.remove('hidden');
-        
-        // Renderizar Canvas en vivo
         initLiveCanvas(currentPayload);
       }
     }, 1000);
@@ -147,11 +149,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // === INICIALIZAR LIBRERÍA QR STYLING ===
   function initLiveCanvas(data) {
     const previewContainer = document.getElementById('qr-live-preview');
-    previewContainer.innerHTML = ''; // Limpiar lienzo
+    previewContainer.innerHTML = ''; 
 
     qrEngine = new QRCodeStyling({
-      width: 250, // Tamaño visual en pantalla
+      width: 250, 
       height: 250,
+      margin: 5, // >_ CIRUGÍA: ZONA DE SILENCIO (Quiet Zone) APLICADA
       type: "canvas",
       data: data,
       dotsOptions: { color: "#000000", type: "square" },
@@ -162,7 +165,28 @@ document.addEventListener('DOMContentLoaded', () => {
     qrEngine.append(previewContainer);
   }
 
-  // === ZONA 3: ESTACIÓN DE DISEÑO Y DIRECT LINKS ===
+  // === ZONA 3: ESTACIÓN DE DISEÑO (MODALES INTERSTITIALES CONTROLADOS) ===
+
+  // Función que dispara el Modal de Diseño de 10s (Evita popunders invasivos)
+  function triggerDesignAd(moduleName, callback) {
+    const modal = document.getElementById('modal-design-ad');
+    const countdownEl = document.getElementById('design-ad-countdown');
+    
+    modal.classList.remove('hidden');
+    
+    let seconds = 10;
+    countdownEl.textContent = seconds < 10 ? `0${seconds}` : seconds;
+    
+    const timer = setInterval(() => {
+      seconds--;
+      countdownEl.textContent = seconds < 10 ? `0${seconds}` : seconds;
+      if (seconds <= 0) {
+        clearInterval(timer);
+        modal.classList.add('hidden');
+        callback(); // Ejecuta el cambio de color o forma
+      }
+    }, 1000);
+  }
 
   // Función comodín para los Direct Links (Se conectará luego con el AdManager)
   function tryTriggerDirectLink() {
@@ -175,15 +199,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const colorChips = document.querySelectorAll('.color-chip');
   colorChips.forEach(chip => {
     chip.addEventListener('click', (e) => {
-      tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
-
-      // Efecto visual activo
-      colorChips.forEach(c => c.classList.remove('ring-2', 'ring-[#00FF00]'));
-      chip.classList.add('ring-2', 'ring-[#00FF00]');
-      
       const hex = chip.dataset.color;
-      document.getElementById('custom-color-picker').value = hex;
-      if (qrEngine) qrEngine.update({ dotsOptions: { color: hex } });
+      
+      const applyColor = () => {
+        tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
+        colorChips.forEach(c => c.classList.remove('ring-2', 'ring-[#00FF00]'));
+        chip.classList.add('ring-2', 'ring-[#00FF00]');
+        document.getElementById('custom-color-picker').value = hex;
+        if (qrEngine) qrEngine.update({ dotsOptions: { color: hex } });
+        
+        // 🟢 TELEMETRÍA: COLOR APLICADO
+        if (typeof TelemetryEngine !== 'undefined') {
+          TelemetryEngine.trackEvent('PERSONALIZAR_COLOR', { hex: hex });
+        }
+      };
+
+      if (!hasSeenColorAd) {
+        hasSeenColorAd = true;
+        triggerDesignAd("COLOR", applyColor);
+      } else {
+        applyColor(); // Si ya vio el anuncio, cambia libremente
+      }
     });
   });
 
@@ -191,21 +227,37 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('custom-color-picker').addEventListener('input', (e) => {
     colorChips.forEach(c => c.classList.remove('ring-2', 'ring-[#00FF00]'));
     if (qrEngine) qrEngine.update({ dotsOptions: { color: e.target.value } });
+    
+    // 🟢 TELEMETRÍA: COLOR LIBRE
+    if (typeof TelemetryEngine !== 'undefined') {
+      TelemetryEngine.trackEvent('PERSONALIZAR_COLOR_LIBRE', { hex: e.target.value });
+    }
   });
 
   // 2. Formas de Módulos
   const shapeBtns = document.querySelectorAll('.shape-btn');
   shapeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
-
-      shapeBtns.forEach(b => {
-        b.classList.remove('bg-[#00FF00]', 'text-black', 'font-bold');
-      });
-      btn.classList.add('bg-[#00FF00]', 'text-black', 'font-bold');
-      
       const shape = btn.dataset.shape;
-      if (qrEngine) qrEngine.update({ dotsOptions: { type: shape } });
+      
+      const applyShape = () => {
+        tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
+        shapeBtns.forEach(b => b.classList.remove('bg-[#00FF00]', 'text-black', 'font-bold'));
+        btn.classList.add('bg-[#00FF00]', 'text-black', 'font-bold');
+        if (qrEngine) qrEngine.update({ dotsOptions: { type: shape } });
+        
+        // 🟢 TELEMETRÍA: FORMA APLICADA
+        if (typeof TelemetryEngine !== 'undefined') {
+          TelemetryEngine.trackEvent('PERSONALIZAR_FORMA', { forma: shape });
+        }
+      };
+
+      if (!hasSeenShapeAd) {
+        hasSeenShapeAd = true;
+        triggerDesignAd("ESTRUCTURA", applyShape);
+      } else {
+        applyShape(); // Si ya vio el anuncio, cambia libremente
+      }
     });
   });
 
@@ -233,6 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
           imageOptions: { hideBackgroundDots: true, imageSize: 0.3, margin: 10 } 
         });
         btnClearLogo.classList.remove('hidden');
+        
+        // 🟢 TELEMETRÍA: LOGO SUBIDO
+        if (typeof TelemetryEngine !== 'undefined') {
+          TelemetryEngine.trackEvent('CARGAR_LOGO_PERSONALIZADO', { sizeMB: (file.size / 1024 / 1024).toFixed(2) });
+        }
       }
     };
     reader.readAsDataURL(file);
@@ -241,41 +298,39 @@ document.addEventListener('DOMContentLoaded', () => {
   btnClearLogo.addEventListener('click', () => {
     logoInput.value = '';
     btnClearLogo.classList.add('hidden');
-    if (qrEngine) qrEngine.update({ image: '' }); // Quita la imagen
+    if (qrEngine) qrEngine.update({ image: '' }); 
   });
 
-  // === DESCARGA EN ALTA RESOLUCIÓN HD/4K + TELEMETRÍA DE CONTEO (+1) ===
+  // === DESCARGA EN ALTA RESOLUCIÓN HD/4K ===
   function executeDownload(extension) {
     if (!qrEngine) return;
     
+    // Aquí el usuario ya interactuó suficiente, le damos el QR sin más anuncios.
     tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
 
     const size = parseInt(document.getElementById('download-resolution').value);
     
-    // Configurar temporalmente el tamaño gigante en memoria para exportar
-    qrEngine.update({
-      width: size,
-      height: size
-    });
+    qrEngine.update({ width: size, height: size });
 
     qrEngine.download({
       name: `LibreQR_${Date.now()}`,
-      extension: extension // "png" o "jpeg"
+      extension: extension 
     }).then(() => {
-      // Restaurar tamaño visual para que no se rompa la web
-      qrEngine.update({ width: 250, height: 250 });
+      qrEngine.update({ width: 250, height: 250 }); // Restaurar vista
       
+      // 🟢 TELEMETRÍA GLOBAL DE LA DESCARGA
+      if (typeof TelemetryEngine !== 'undefined') {
+        TelemetryEngine.trackEvent('EXPORTAR_DOCUMENTO', { formato: extension, resolucion: size });
+      }
+
       // 🟢 AVISAR AL BÚNKER DE LA NUEVA DESCARGA (+1)
       try {
         fetch(`${API_BASE_URL}/stats/increment`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
-        }).catch(e => console.warn("Telemetría de conteo en segundo plano silenciada."));
-      } catch (err) {
-        // Ignorar para no bloquear la UI
-      }
+        }).catch(e => console.warn("Telemetría silenciosa."));
+      } catch (err) {}
 
-      // Abrir modal de Feedback post-descarga
       document.getElementById('modal-feedback').classList.remove('hidden');
     });
   }
@@ -283,10 +338,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-download-png').addEventListener('click', () => executeDownload('png'));
   document.getElementById('btn-download-jpg').addEventListener('click', () => executeDownload('jpeg'));
 
-  // === FLUJO DEL MODAL DE FEEDBACK (Votar y Cerrar) ===
+  // === FLUJO DEL MODAL DE FEEDBACK ===
   const emojiBtns = document.querySelectorAll('#emoji-picker span');
   const btnCloseFeedback = document.getElementById('btn-close-feedback');
-  let selectedRating = 5; // Default 5 stars
+  let selectedRating = 5;
 
   emojiBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -304,23 +359,16 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-send-feedback').addEventListener('click', submitFeedback);
   btnCloseFeedback.addEventListener('click', submitFeedback);
 
-  // === (NUEVO) ENVÍO DE TELEMETRÍA AL BACKEND ===
+  // === ENVÍO DE TELEMETRÍA AL BACKEND ===
   async function submitFeedback() {
     const comment = document.getElementById('feedback-text').value.trim();
     const btnSend = document.getElementById('btn-send-feedback');
     
-    // Desactivar botón para evitar doble envío (Anti-Spam de interfaz)
     btnSend.disabled = true;
     btnSend.innerHTML = "ENVIANDO DATOS...";
 
-    // Generar un Token de Descarga Único para esta sesión
     const downloadToken = `QR_SESSION_${Date.now().toString(36)}_${Math.random().toString(36).substr(2)}`;
-
-    const payload = {
-      rating: selectedRating,
-      comment: comment,
-      downloadToken: downloadToken
-    };
+    const payload = { rating: selectedRating, comment: comment, downloadToken: downloadToken };
 
     try {
       const response = await fetch(`${API_BASE_URL}/feedback`, {
@@ -328,25 +376,16 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
       const data = await response.json();
-      
-      if (data.success) {
-        console.log("🟢 [TELEMETRÍA] Datos cifrados y guardados en la base principal.");
-      } else {
-        console.warn("⚠️ [ALERTA DE BÚNKER] Mensaje del servidor:", data.message);
-      }
-    } catch (error) {
-      console.error("🔴 [FALLA DE ENLACE] No se pudo contactar al servidor:", error);
-    }
+      if (data.success) console.log("🟢 [TELEMETRÍA] Guardada en base principal.");
+    } catch (error) {}
     
-    // Cerrar modal y reiniciar
     document.getElementById('modal-feedback').classList.add('hidden');
     alert("¡Búnker agradece su telemetría! El QR está asegurado en su dispositivo.");
     location.reload(); 
   }
 
-  // === (NUEVO) CARGAR TELEMETRÍA PÚBLICA EN EL FOOTER ===
+  // === CARGAR TELEMETRÍA PÚBLICA EN FOOTER ===
   async function loadPublicFeedback() {
     try {
       const response = await fetch(`${API_BASE_URL}/feedback/public`);
@@ -355,33 +394,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success && data.reviews.length > 0) {
         const ticker = document.getElementById('feedback-ticker');
         if (ticker) {
-          ticker.innerHTML = ''; // Limpiar textos falsos de prueba
-
+          ticker.innerHTML = '';
           data.reviews.forEach(review => {
-            // Asignar emoji según el rating
             const emojis = ['🤬', '🙁', '😐', '😊', '🚀'];
             const ratingEmoji = emojis[review.rating - 1] || '🚀';
-            
-            // Formatear hora de la operación (Hora de Buenos Aires)
             const dateObj = new Date(review.createdAt);
             const timeString = dateObj.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
 
-            const reviewHTML = `
+            ticker.innerHTML += `
               <div class="border-l-2 border-[#00FF00] pl-3 py-2 bg-[#0a0a0a] mb-2 rounded shadow-[0_0_5px_rgba(0,255,0,0.1)]">
                 <p class="text-[10px] opacity-60 mb-1">Telemetría de las ${timeString} | Nivel: ${ratingEmoji}</p>
                 <p class="text-xs text-gray-300">"${review.comment || 'Operación silenciosa. Sin reporte de texto.'}"</p>
               </div>
             `;
-            ticker.innerHTML += reviewHTML;
           });
         }
       }
-    } catch (error) {
-      console.error("🔴 [RADAR OFFLINE] No se pudieron cargar las opiniones de la comunidad.");
-    }
+    } catch (error) {}
   }
-
-  // Ejecutar el radar al iniciar la web
   loadPublicFeedback();
 });
 
