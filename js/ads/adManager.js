@@ -1,69 +1,109 @@
 // ==========================================
-// 👑 AD MANAGER (GENERAL DE PUBLICIDAD UNIFICADO)
+// 👑 AD MANAGER V3.0 (A-ADS + MONETAG AUTÓNOMO)
 // ==========================================
 
 const AdManager = {
   // ----------------------------------------
-  // 🖼️ ESCUADRÓN 1: BANNERS ESTÁTICOS
+  // 🖼️ ESCUADRÓN 1: BANNERS ESTÁTICOS (A-ADS)
   // ----------------------------------------
-  init() {
-    console.log("🛡️ [AD MANAGER] Desplegando unidades publicitarias estáticas...");
-    if (typeof BannerTop !== 'undefined') BannerTop.init();
-    if (typeof BannerSide !== 'undefined') BannerSide.init(); // Flancos
-    if (typeof BannerMid !== 'undefined') BannerMid.init();
-    if (typeof BannerBottom !== 'undefined') BannerBottom.init();
+  deployAAds() {
+    console.log("🛡️ [AD MANAGER] Desplegando unidades A-Ads estáticas...");
+
+    const adUnits = [
+      { id: 'ad-banner-top', unit: '2449861', width: '70%' },
+      { id: 'ad-banner-bottom', unit: '2449861', width: '70%' },
+      { id: 'ad-sidebar-left', unit: '2449857', width: '100%' },
+      { id: 'ad-sidebar-right', unit: '2449857', width: '100%' }
+    ];
+
+    adUnits.forEach(ad => {
+      const container = document.getElementById(ad.id);
+      if (container) {
+        container.innerHTML = `
+          <div style="width: 100%; margin: auto; display: flex; justify-content: center; align-items: center; position: relative; z-index: 90;">
+            <iframe data-aa='${ad.unit}' src='https://acceptable.a-ads.com/${ad.unit}/?size=Adaptive'
+                    style='border:0; padding:0; width:${ad.width}; height:auto; min-height:90px; overflow:hidden; display: block; margin: auto;'
+                    sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms">
+            </iframe>
+          </div>
+        `;
+      }
+    });
   },
 
-  interceptDownload(callback, seconds = 5) {
-    if (typeof InterceptDownload !== 'undefined') {
-      InterceptDownload.trigger(callback, seconds);
-    } else {
-      if (typeof callback === 'function') callback();
-    }
+  // ----------------------------------------
+  // ⚡ ESCUADRÓN 2: MONETAG INTERSTITIAL (CON ESCUDO COOLDOWN)
+  // ----------------------------------------
+  monetagConfig: {
+    maxDailyImpacts: 3,        // Máximo de anuncios por día
+    cooldownMinutes: 2         // Minutos de espera entre cada anuncio (Reducido a 2 para más agresividad controlada)
   },
 
-  // ----------------------------------------
-  // ⚡ ESCUADRÓN 2: DIRECT LINKS (LÍMITE DIARIO)
-  // ----------------------------------------
-  directLinkURL: "https://www.effectivecpmnetwork.com/ncxfjzveik?key=8961b6510ea880dc0263707e4f3e1591",
-  
-  maxClicksPerDay: 2,
+  canTriggerMonetag() {
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+    const storedData = JSON.parse(localStorage.getItem('bunker_monetag_telemetry')) || { date: todayStr, count: 0, lastFired: 0 };
 
-  canTriggerAd() {
-    const today = new Date().toISOString().split('T')[0]; // Ej: "2026-07-27"
-    const storedData = JSON.parse(localStorage.getItem('bunker_ad_telemetry')) || {};
-
-    if (storedData.date !== today) {
-      storedData.date = today;
-      storedData.clicks = 0;
+    if (storedData.date !== todayStr) {
+      storedData.date = todayStr;
+      storedData.count = 0;
     }
 
-    if (storedData.clicks >= this.maxClicksPerDay) {
-      console.log(`🛡️ [ADS] Límite diario alcanzado (${this.maxClicksPerDay}/${this.maxClicksPerDay}). Fuego retenido.`);
+    if (storedData.count >= this.monetagConfig.maxDailyImpacts) {
+      console.log(`🛡️ [MONETAG] Límite diario alcanzado (${storedData.count}/${this.monetagConfig.maxDailyImpacts}). Fuego retenido.`);
       return false;
     }
 
-    storedData.clicks += 1;
-    localStorage.setItem('bunker_ad_telemetry', JSON.stringify(storedData));
-    console.log(`💥 [ADS] Disparo publicitario ejecutado (${storedData.clicks}/${this.maxClicksPerDay}).`);
+    const minutesSinceLast = (now.getTime() - storedData.lastFired) / (1000 * 60);
+    if (minutesSinceLast < this.monetagConfig.cooldownMinutes) {
+      console.log(`⏱️ [MONETAG] Armas enfriando. Faltan ${(this.monetagConfig.cooldownMinutes - minutesSinceLast).toFixed(1)} min.`);
+      return false;
+    }
+
+    storedData.count += 1;
+    storedData.lastFired = now.getTime();
+    localStorage.setItem('bunker_monetag_telemetry', JSON.stringify(storedData));
     
     return true;
   },
 
-  fireDirectLink() {
-    if (this.canTriggerAd()) {
-      window.open(this.directLinkURL, '_blank');
+  triggerMonetagAd() {
+    if (this.canTriggerMonetag()) {
+      console.log("💥 [MONETAG] Disparo Interstitial Autorizado. Impacto inminente.");
+      
+      const script = document.createElement('script');
+      // 👇 PEGUE EL ENLACE DE MONETAG JUSTO AQUÍ CUANDO LO TENGA 👇
+      script.src = "//narcissolem.com/TU_NUEVO_ZONE_ID/invoke.js"; 
+      
+      script.async = true;
+      script.dataset.cfasync = "false";
+      document.head.appendChild(script);
     }
+  },
+
+  // ----------------------------------------
+  // 🎯 ESCUADRÓN 3: INTERCEPTOR INVISIBLE (NUEVO)
+  // ----------------------------------------
+  interceptAction(callback, actionName = "Operación") {
+    console.log(`🎯 [OPERACIÓN] Ejecutando acción: ${actionName}`);
+    
+    // 1. Detonamos Monetag (Si el cooldown lo permite)
+    this.triggerMonetagAd();
+
+    // 2. Ejecutamos la acción real del usuario (Generar o Descargar)
+    // Usamos un micro-retraso de 500ms para asegurar que Monetag inyecte su UI primero.
+    if (typeof callback === 'function') {
+      setTimeout(() => {
+        callback();
+      }, 500);
+    }
+  },
+
+  init() {
+    this.deployAAds();
   }
 };
 
-// Enlace global para que main.js pueda detonar el Direct Link
-window.triggerAdsterraDirectLink = function() {
-  AdManager.fireDirectLink();
-};
-
-// Arrancar sistema de banners al cargar la base
 document.addEventListener('DOMContentLoaded', () => {
   AdManager.init();
 });
-

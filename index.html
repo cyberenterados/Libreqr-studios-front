@@ -296,70 +296,6 @@
   <!-- MODALES DE OPERACIÓN CLANDESTINA           -->
   <!-- ========================================== -->
 
-  <!-- ⚡ MODAL 1: ANUNCIO INTERSTITIAL (GENERACIÓN DE QR) -->
-  <div id="modal-ad" class="fixed inset-0 z-[999999] bg-[#050505]/98 backdrop-blur-xl hidden flex flex-col items-center justify-center gap-6 p-4 text-center">
-    
-    <!-- 1. MENSAJE CIVIL UNIFICADO -->
-    <p class="text-xs sm:text-sm text-[#00FF00] font-mono max-w-xs sm:max-w-md leading-relaxed px-2 opacity-90">
-      >_ Esta publicidad financia nuestro proyecto LibreQr y permite que sea gratis para los usuarios
-    </p>
-
-    <!-- 2. BANNER PUBLICITARIO CENTRADO (TAMAÑO ORIGINAL SIN MARCOS) -->
-    <div class="w-[300px] h-[250px] flex items-center justify-center overflow-hidden my-2">
-      <iframe sandbox="allow-scripts allow-popups allow-same-origin" srcdoc="
-        <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
-          <script>
-            atOptions = {
-              'key' : 'd8843124e0f9be2fc59decdcdfa56387',
-              'format' : 'iframe',
-              'height' : 250,
-              'width' : 300,
-              'params' : {}
-            };
-          </script>
-          <script src='https://www.highperformanceformat.com/d8843124e0f9be2fc59decdcdfa56387/invoke.js'></script>
-        </body></html>
-      " style="width: 300px; height: 250px; border: none; overflow: hidden;" scrolling="no"></iframe>
-    </div>
-
-    <!-- 3. CONTADOR DE SEGUNDOS NEÓN -->
-    <p class="text-5xl font-bold font-mono neon-text tracking-widest" id="ad-countdown">10</p>
-
-  </div>
-
-  <!-- 🎨 MODAL 2: ANUNCIO INTERSTITIAL (PERSONALIZACIÓN Y DISEÑO) -->
-  <div id="modal-design-ad" class="fixed inset-0 z-[999999] bg-[#050505]/98 backdrop-blur-xl hidden flex flex-col items-center justify-center gap-6 p-4 text-center">
-    
-    <!-- 1. MENSAJE CIVIL UNIFICADO -->
-    <p class="text-xs sm:text-sm text-[#00FF00] font-mono max-w-xs sm:max-w-md leading-relaxed px-2 opacity-90">
-      >_ Esta publicidad financia nuestro proyecto LibreQr y permite que sea gratis para los usuarios
-    </p>
-
-    <!-- 2. BANNER PUBLICITARIO CENTRADO (TAMAÑO ORIGINAL SIN MARCOS) -->
-    <div class="w-[300px] h-[250px] flex items-center justify-center overflow-hidden my-2">
-      <iframe sandbox="allow-scripts allow-popups allow-same-origin" srcdoc="
-        <html><head></head><body style='margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:transparent;'>
-          <script>
-            atOptions = {
-              'key' : 'd8843124e0f9be2fc59decdcdfa56387',
-              'format' : 'iframe',
-              'height' : 250,
-              'width' : 300,
-              'params' : {}
-            };
-          </script>
-          <script src='https://www.highperformanceformat.com/d8843124e0f9be2fc59decdcdfa56387/invoke.js'></script>
-        </body></html>
-      " style="width: 300px; height: 250px; border: none; overflow: hidden;" scrolling="no"></iframe>
-    </div>
-
-    <!-- 3. CONTADOR DE SEGUNDOS NEÓN -->
-    <p class="text-5xl font-bold font-mono neon-text tracking-widest" id="design-ad-countdown">10</p>
-
-  </div>
-
-  <!-- 💬 MODAL 3: FEEDBACK POST-DESCARGA (Dejar igual...) -->
-
   <!-- 💬 MODAL 3: FEEDBACK POST-DESCARGA -->
   <div id="modal-feedback" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex flex-col items-center justify-center p-4">
     <div class="bg-[#050505] border border-[#00FF00] p-6 max-w-md w-full shadow-[0_0_20px_rgba(0,255,0,0.3)] rounded text-center">
@@ -385,11 +321,8 @@
   </div>
 
   <!-- Scripts -->
+  <!-- Scripts -->
   <script src="js/ads/antiblock.js"></script>
-  <script src="js/ads/banner-top.js"></script>
-  <script src="js/ads/banner-left.js"></script>
-  <script src="js/ads/banner-right.js"></script>
-  <script src="js/ads/banner-bottom.js"></script>
   <script src="js/ads/adManager.js"></script>
   <script src="js/main.js"></script>
   <!-- 🟢 NUEVO: MOTOR DE RASTREO CIVIL -->

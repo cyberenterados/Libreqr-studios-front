@@ -1,13 +1,13 @@
+// ==========================================
+// 🧠 NÚCLEO PRINCIPAL (MAIN) | LIBREQR STUDIOS
+// ==========================================
+
 document.addEventListener('DOMContentLoaded', () => {
   // === ESTADO GLOBAL ===
   let currentType = 'url';
-  let qrEngine = null; // Instancia del generador
-  let currentPayload = ''; // Datos del QR
+  let qrEngine = null; 
+  let currentPayload = ''; 
   let isSpamFlagged = false;
-  
-  // Banderas para publicidad UX amigable (Solo saltan 1 vez por sesión)
-  let hasSeenColorAd = false;
-  let hasSeenShapeAd = false;
 
   // === ELEMENTOS DEL DOM ===
   const inputZone = document.getElementById('input-zone');
@@ -101,15 +101,33 @@ document.addEventListener('DOMContentLoaded', () => {
     return null;
   }
 
+  // === INICIALIZAR LIBRERÍA QR STYLING ===
+  function initLiveCanvas(data) {
+    const previewContainer = document.getElementById('qr-live-preview');
+    previewContainer.innerHTML = ''; 
+
+    qrEngine = new QRCodeStyling({
+      width: 250, 
+      height: 250,
+      margin: 5, 
+      type: "canvas",
+      data: data,
+      dotsOptions: { color: "#000000", type: "square" },
+      backgroundOptions: { color: "#ffffff" },
+      imageOptions: { crossOrigin: "anonymous", margin: 10, imageSize: 0.3 }
+    });
+
+    qrEngine.append(previewContainer);
+  }
+
   // === ZONA 2: PEAJE INICIAL (BOTÓN GENERAR) ===
   document.getElementById('btn-generate').addEventListener('click', async () => {
     currentPayload = extractPayload();
     if (!currentPayload) return;
 
-    // 🟢 TELEMETRÍA: INTENTO DE GENERACIÓN
+    // 🟢 TELEMETRÍA
     if (typeof TelemetryEngine !== 'undefined') {
       TelemetryEngine.trackEvent('DISPARAR_GENERACION', { tipo: currentType });
-      TelemetryEngine.trackEvent('DISPARAR_INTERSTITIAL', { red: "Monetag", duracion_sec: 10 });
     }
 
     try {
@@ -124,77 +142,23 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn("⚠️ Radar Anti-AdBlock offline. Permitiendo paso...");
     }
 
-    console.log("🟢 Conexión limpia (AdBlock Desactivado). Generando QR...");
+    console.log("🟢 Conexión limpia. Solicitando despliegue de QR...");
 
-    const modalAd = document.getElementById('modal-ad');
-    const adCountdown = document.getElementById('ad-countdown');
+    // 🛡️ NODO AD-MANAGER: INYECCIÓN DE INTERSTITIAL (Modal de 3 Segundos)
+    const executeGeneration = () => {
+      inputZone.classList.add('hidden');
+      customZone.classList.remove('hidden');
+      initLiveCanvas(currentPayload);
+    };
 
-    modalAd.classList.remove('hidden');
-
-    let seconds = 10; // Tiempo de peaje
-    adCountdown.textContent = seconds < 10 ? `0${seconds}` : seconds;
-
-    const timer = setInterval(() => {
-      seconds--;
-      adCountdown.textContent = seconds < 10 ? `0${seconds}` : seconds;
-      if (seconds <= 0) {
-        clearInterval(timer);
-        modalAd.classList.add('hidden');
-        inputZone.classList.add('hidden');
-        customZone.classList.remove('hidden');
-        initLiveCanvas(currentPayload);
-      }
-    }, 1000);
+    if (typeof AdManager !== 'undefined') {
+      AdManager.interceptAction(executeGeneration, "Generación Inicial", 3);
+    } else {
+      executeGeneration(); // Respaldo si falla el gestor de ads
+    }
   });
 
-  // === INICIALIZAR LIBRERÍA QR STYLING ===
-  function initLiveCanvas(data) {
-    const previewContainer = document.getElementById('qr-live-preview');
-    previewContainer.innerHTML = ''; 
-
-    qrEngine = new QRCodeStyling({
-      width: 250, 
-      height: 250,
-      margin: 5, // >_ CIRUGÍA: ZONA DE SILENCIO (Quiet Zone) APLICADA
-      type: "canvas",
-      data: data,
-      dotsOptions: { color: "#000000", type: "square" },
-      backgroundOptions: { color: "#ffffff" },
-      imageOptions: { crossOrigin: "anonymous", margin: 10, imageSize: 0.3 }
-    });
-
-    qrEngine.append(previewContainer);
-  }
-
-  // === ZONA 3: ESTACIÓN DE DISEÑO (MODALES INTERSTITIALES CONTROLADOS) ===
-
-  // Función que dispara el Modal de Diseño de 10s (Evita popunders invasivos)
-  function triggerDesignAd(moduleName, callback) {
-    const modal = document.getElementById('modal-design-ad');
-    const countdownEl = document.getElementById('design-ad-countdown');
-    
-    modal.classList.remove('hidden');
-    
-    let seconds = 10;
-    countdownEl.textContent = seconds < 10 ? `0${seconds}` : seconds;
-    
-    const timer = setInterval(() => {
-      seconds--;
-      countdownEl.textContent = seconds < 10 ? `0${seconds}` : seconds;
-      if (seconds <= 0) {
-        clearInterval(timer);
-        modal.classList.add('hidden');
-        callback(); // Ejecuta el cambio de color o forma
-      }
-    }, 1000);
-  }
-
-  // Función comodín para los Direct Links (Se conectará luego con el AdManager)
-  function tryTriggerDirectLink() {
-    if (typeof triggerAdsterraDirectLink === 'function') {
-      triggerAdsterraDirectLink();
-    }
-  }
+  // === ZONA 3: ESTACIÓN DE DISEÑO (PERSONALIZACIÓN) ===
 
   // 1. Chips de Color
   const colorChips = document.querySelectorAll('.color-chip');
@@ -203,33 +167,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const hex = chip.dataset.color;
       
       const applyColor = () => {
-        tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
         colorChips.forEach(c => c.classList.remove('ring-2', 'ring-[#00FF00]'));
         chip.classList.add('ring-2', 'ring-[#00FF00]');
         document.getElementById('custom-color-picker').value = hex;
         if (qrEngine) qrEngine.update({ dotsOptions: { color: hex } });
         
-        // 🟢 TELEMETRÍA: COLOR APLICADO
         if (typeof TelemetryEngine !== 'undefined') {
           TelemetryEngine.trackEvent('PERSONALIZAR_COLOR', { hex: hex });
         }
       };
 
-      if (!hasSeenColorAd) {
-        hasSeenColorAd = true;
-        triggerDesignAd("COLOR", applyColor);
-      } else {
-        applyColor(); // Si ya vio el anuncio, cambia libremente
-      }
+      // 🛡️ NODO AD-MANAGER (0 Segundos = Sin modal visual, solo evalúa disparo de interstitial)
+      if (typeof AdManager !== 'undefined') AdManager.interceptAction(applyColor, "Cambio de Color", 0);
+      else applyColor();
     });
   });
 
-  // Color Picker Libre
+  // Color Picker Libre (Sin anuncios para no saturar al mover el selector libremente)
   document.getElementById('custom-color-picker').addEventListener('input', (e) => {
     colorChips.forEach(c => c.classList.remove('ring-2', 'ring-[#00FF00]'));
     if (qrEngine) qrEngine.update({ dotsOptions: { color: e.target.value } });
     
-    // 🟢 TELEMETRÍA: COLOR LIBRE
     if (typeof TelemetryEngine !== 'undefined') {
       TelemetryEngine.trackEvent('PERSONALIZAR_COLOR_LIBRE', { hex: e.target.value });
     }
@@ -242,23 +200,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const shape = btn.dataset.shape;
       
       const applyShape = () => {
-        tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
         shapeBtns.forEach(b => b.classList.remove('bg-[#00FF00]', 'text-black', 'font-bold'));
         btn.classList.add('bg-[#00FF00]', 'text-black', 'font-bold');
         if (qrEngine) qrEngine.update({ dotsOptions: { type: shape } });
         
-        // 🟢 TELEMETRÍA: FORMA APLICADA
         if (typeof TelemetryEngine !== 'undefined') {
           TelemetryEngine.trackEvent('PERSONALIZAR_FORMA', { forma: shape });
         }
       };
 
-      if (!hasSeenShapeAd) {
-        hasSeenShapeAd = true;
-        triggerDesignAd("ESTRUCTURA", applyShape);
-      } else {
-        applyShape(); // Si ya vio el anuncio, cambia libremente
-      }
+      // 🛡️ NODO AD-MANAGER (0 Segundos)
+      if (typeof AdManager !== 'undefined') AdManager.interceptAction(applyShape, "Cambio de Forma", 0);
+      else applyShape();
     });
   });
 
@@ -280,14 +233,12 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.onload = (event) => {
       const base64Img = event.target.result;
       if (qrEngine) {
-        // hideBackgroundDots hace que el QR quite los puntos detrás del logo
         qrEngine.update({ 
           image: base64Img, 
           imageOptions: { hideBackgroundDots: true, imageSize: 0.3, margin: 10 } 
         });
         btnClearLogo.classList.remove('hidden');
         
-        // 🟢 TELEMETRÍA: LOGO SUBIDO
         if (typeof TelemetryEngine !== 'undefined') {
           TelemetryEngine.trackEvent('CARGAR_LOGO_PERSONALIZADO', { sizeMB: (file.size / 1024 / 1024).toFixed(2) });
         }
@@ -306,34 +257,39 @@ document.addEventListener('DOMContentLoaded', () => {
   function executeDownload(extension) {
     if (!qrEngine) return;
     
-    // Aquí el usuario ya interactuó suficiente, le damos el QR sin más anuncios.
-    tryTriggerDirectLink(); // [NODO DE INYECCIÓN - DIRECT LINK]
-
     const size = parseInt(document.getElementById('download-resolution').value);
     
-    qrEngine.update({ width: size, height: size });
+    const startDownload = () => {
+      qrEngine.update({ width: size, height: size });
 
-    qrEngine.download({
-      name: `LibreQR_${Date.now()}`,
-      extension: extension 
-    }).then(() => {
-      qrEngine.update({ width: 250, height: 250 }); // Restaurar vista
-      
-      // 🟢 TELEMETRÍA GLOBAL DE LA DESCARGA
-      if (typeof TelemetryEngine !== 'undefined') {
-        TelemetryEngine.trackEvent('EXPORTAR_DOCUMENTO', { formato_archivo: extension.toUpperCase(), resolucion: `${size}x${size}` });
-      }
+      qrEngine.download({
+        name: `LibreQR_${Date.now()}`,
+        extension: extension 
+      }).then(() => {
+        qrEngine.update({ width: 250, height: 250 }); // Restaurar vista del canvas
+        
+        if (typeof TelemetryEngine !== 'undefined') {
+          TelemetryEngine.trackEvent('EXPORTAR_DOCUMENTO', { formato_archivo: extension.toUpperCase(), resolucion: `${size}x${size}` });
+        }
 
-      // 🟢 AVISAR AL BÚNKER DE LA NUEVA DESCARGA (+1)
-      try {
-        fetch(`${API_BASE_URL}/stats/increment`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        }).catch(e => console.warn("Telemetría silenciosa."));
-      } catch (err) {}
+        // 🟢 AVISAR AL BÚNKER DE LA NUEVA DESCARGA (+1)
+        try {
+          fetch(`${API_BASE_URL}/stats/increment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          }).then(res => res.json()).catch(e => console.warn("Falla en telemetría de conteo."));
+        } catch (err) {}
 
-      document.getElementById('modal-feedback').classList.remove('hidden');
-    });
+        document.getElementById('modal-feedback').classList.remove('hidden');
+      });
+    };
+
+    // 🛡️ NODO AD-MANAGER (3 Segundos con Modal Visual)
+    if (typeof AdManager !== 'undefined') {
+      AdManager.interceptAction(startDownload, "Descarga Final", 3);
+    } else {
+      startDownload();
+    }
   }
 
   document.getElementById('btn-download-png').addEventListener('click', () => executeDownload('png'));
@@ -360,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-send-feedback').addEventListener('click', submitFeedback);
   btnCloseFeedback.addEventListener('click', submitFeedback);
 
-  // === ENVÍO DE TELEMETRÍA AL BACKEND ===
   async function submitFeedback() {
     const comment = document.getElementById('feedback-text').value.trim();
     const btnSend = document.getElementById('btn-send-feedback');
@@ -379,7 +334,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const data = await response.json();
       if (data.success) console.log("🟢 [TELEMETRÍA] Guardada en base principal.");
-    } catch (error) {}
+    } catch (error) {
+      console.warn("🔴 Error al conectar con Búnker Central.");
+    }
     
     document.getElementById('modal-feedback').classList.add('hidden');
     alert("¡Búnker agradece su telemetría! El QR está asegurado en su dispositivo.");
@@ -416,3 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPublicFeedback();
 });
 
+/* 
+  // [ESP] No almacenamos datos privados de los usuarios, solo medimos usos de herramientas de nuestra app.
+  // [ENG] We do not store private user data, we only measure tool usage of our app.
+*/
