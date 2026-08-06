@@ -69,15 +69,16 @@ const AdManager = {
 
   triggerMonetagAd() {
     if (this.canTriggerMonetag()) {
-      console.log("💥 [MONETAG] Disparo Interstitial Autorizado. Impacto inminente.");
+      console.log("💥 [MONETAG] Desplegando Escudo Vignette (Superposición). Impacto inminente.");
       
+      // Armado táctico del script extraído de Monetag
       const script = document.createElement('script');
-      // 👇 PEGUE EL ENLACE DE MONETAG JUSTO AQUÍ CUANDO LO TENGA 👇
-      script.src = "//narcissolem.com/TU_NUEVO_ZONE_ID/invoke.js"; 
+      script.dataset.zone = '11520148';
+      script.src = 'https://n6wxm.com/vignette.min.js';
       
-      script.async = true;
-      script.dataset.cfasync = "false";
-      document.head.appendChild(script);
+      // Inyección en el DOM para detonar la superposición
+      const target = document.body || document.documentElement;
+      target.appendChild(script);
     }
   },
 
