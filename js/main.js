@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🟢 TELEMETRÍA: INTENTO DE GENERACIÓN
     if (typeof TelemetryEngine !== 'undefined') {
       TelemetryEngine.trackEvent('DISPARAR_GENERACION', { tipo: currentType });
+      TelemetryEngine.trackEvent('DISPARAR_INTERSTITIAL', { red: "Monetag", duracion_sec: 10 });
     }
 
     try {
@@ -320,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // 🟢 TELEMETRÍA GLOBAL DE LA DESCARGA
       if (typeof TelemetryEngine !== 'undefined') {
-        TelemetryEngine.trackEvent('EXPORTAR_DOCUMENTO', { formato: extension, resolucion: size });
+        TelemetryEngine.trackEvent('EXPORTAR_DOCUMENTO', { formato_archivo: extension.toUpperCase(), resolucion: `${size}x${size}` });
       }
 
       // 🟢 AVISAR AL BÚNKER DE LA NUEVA DESCARGA (+1)
