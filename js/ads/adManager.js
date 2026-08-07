@@ -1,5 +1,5 @@
 // ==========================================
-// 👑 AD MANAGER V3.0 (A-ADS + MONETAG AUTÓNOMO)
+// 👑 AD MANAGER V3.0 (A-ADS + MONETAG UNIFICADO)
 // ==========================================
 
 const AdManager = {
@@ -9,11 +9,14 @@ const AdManager = {
   deployAAds() {
     console.log("🛡️ [AD MANAGER] Desplegando unidades A-Ads estáticas...");
 
+    // Telemetría separada:
+    // 2450912 -> Banners Horizontales (Top & Bottom)
+    // 2450911 -> Flancos Verticales (Left & Right)
     const adUnits = [
-      { id: 'ad-banner-top', unit: '2449861', width: '70%' },
-      { id: 'ad-banner-bottom', unit: '2449861', width: '70%' },
-      { id: 'ad-sidebar-left', unit: '2449857', width: '100%' },
-      { id: 'ad-sidebar-right', unit: '2449857', width: '100%' }
+      { id: 'ad-banner-top', unit: '2450912', width: '70%' },
+      { id: 'ad-banner-bottom', unit: '2450912', width: '70%' },
+      { id: 'ad-sidebar-left', unit: '2450911', width: '100%' },
+      { id: 'ad-sidebar-right', unit: '2450911', width: '100%' }
     ];
 
     adUnits.forEach(ad => {
@@ -36,7 +39,7 @@ const AdManager = {
   // ----------------------------------------
   monetagConfig: {
     maxDailyImpacts: 3,        // Máximo de anuncios por día
-    cooldownMinutes: 2         // Minutos de espera entre cada anuncio (Reducido a 2 para más agresividad controlada)
+    cooldownMinutes: 2         // Minutos de espera entre cada impacto
   },
 
   canTriggerMonetag() {
@@ -71,28 +74,23 @@ const AdManager = {
     if (this.canTriggerMonetag()) {
       console.log("💥 [MONETAG] Desplegando Escudo Vignette (Superposición). Impacto inminente.");
       
-      // Armado táctico del script extraído de Monetag
       const script = document.createElement('script');
       script.dataset.zone = '11520148';
       script.src = 'https://n6wxm.com/vignette.min.js';
       
-      // Inyección en el DOM para detonar la superposición
       const target = document.body || document.documentElement;
       target.appendChild(script);
     }
   },
 
   // ----------------------------------------
-  // 🎯 ESCUADRÓN 3: INTERCEPTOR INVISIBLE (NUEVO)
+  // 🎯 ESCUADRÓN 3: INTERCEPTOR INVISIBLE
   // ----------------------------------------
   interceptAction(callback, actionName = "Operación") {
     console.log(`🎯 [OPERACIÓN] Ejecutando acción: ${actionName}`);
     
-    // 1. Detonamos Monetag (Si el cooldown lo permite)
     this.triggerMonetagAd();
 
-    // 2. Ejecutamos la acción real del usuario (Generar o Descargar)
-    // Usamos un micro-retraso de 500ms para asegurar que Monetag inyecte su UI primero.
     if (typeof callback === 'function') {
       setTimeout(() => {
         callback();
@@ -108,3 +106,4 @@ const AdManager = {
 document.addEventListener('DOMContentLoaded', () => {
   AdManager.init();
 });
+
