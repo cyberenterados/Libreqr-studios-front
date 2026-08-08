@@ -2,22 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Base Principal (Máxima Prioridad) -->
   <url>
-    <loc>https://libreqrstudios.vercel.app/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <loc>https://www.libreqrstudios.com.ar/</loc>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <!-- Escudo Legal: Privacidad -->
   <url>
-    <loc>https://libreqrstudios.vercel.app/privacidad.html</loc>
-    <lastmod>2026-07-26</lastmod>
+    <loc>https://www.libreqrstudios.com.ar/privacidad.html</loc>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <!-- Escudo Legal: Términos -->
   <url>
-    <loc>https://libreqrstudios.vercel.app/terminos.html</loc>
-    <lastmod>2026-07-26</lastmod>
+    <loc>https://www.libreqrstudios.com.ar/terminos.html</loc>
+    <lastmod>2026-08-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
