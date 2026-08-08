@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>LibreQR Studios - Video Render 15s</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px #00FF00; } 50% { box-shadow: 0 0 35px #00FF00; } }
+
+    .scene-1 { animation: fadeIn 0.5s ease forwards, fadeOut 0.5s ease 2.8s forwards; }
+    .scene-2 { animation: fadeIn 0.5s ease 3.2s forwards, fadeOut 0.5s ease 9.5s forwards; opacity: 0; }
+    .scene-3 { animation: fadeIn 0.5s ease 10s forwards; opacity: 0; }
+    .glow-border { border: 2px solid #00FF00; animation: pulseGlow 2s infinite; }
+  </style>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen font-mono text-white">
+
+  <!-- VISTA VERTICAL 9:16 (1080x1920 Proporcional) -->
+  <div class="relative w-[360px] h-[640px] bg-[#050505] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl p-6 flex flex-col justify-between">
+    
+    <!-- HEADER -->
+    <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+      <span class="text-xs text-[#00FF00] tracking-widest uppercase">● LIBREQR STUDIOS</span>
+      <span class="text-xs text-gray-500">PROD-V2</span>
+    </div>
+
+    <!-- ESCENA 1: EL GANCHO [0:00 - 0:03] -->
+    <div class="scene-1 absolute inset-0 p-8 flex flex-col justify-center items-center text-center bg-[#050505]">
+      <div class="text-4xl mb-4">🤔</div>
+      <h1 class="text-2xl font-bold text-white leading-snug">
+        ¿Por qué registrarte para crear un <span class="text-[#00FF00]">simple código QR</span>?
+      </h1>
+      <p class="text-xs text-gray-400 mt-4">Sin correos. Sin contraseñas. Sin spam.</p>
+    </div>
+
+    <!-- ESCENA 2: LA FORTALEZA [0:03 - 0:10] -->
+    <div class="scene-2 absolute inset-0 p-8 flex flex-col justify-center items-center text-center bg-[#050505]">
+      <div class="w-48 h-48 bg-gray-900 glow-border rounded-xl flex flex-col items-center justify-center mb-6 p-4">
+        <!-- SVG MOCKUP DE QR -->
+        <svg class="w-32 h-32 text-[#00FF00]" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm11-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm13-2h2v2h-2v-2zm-4 0h2v2h-2v-2zm2 4h2v2h-2v-2zm2 0h2v2h-2v-2zm-4 2h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
+        </svg>
+      </div>
+      <span class="bg-[#00FF00]/10 text-[#00FF00] border border-[#00FF00] text-xs font-bold px-3 py-1 rounded-full mb-2">
+        EXPORTACIÓN HD / 4K
+      </span>
+      <h2 class="text-xl font-bold text-white">Cero Registros. <br><span class="text-[#00FF00]">Máxima Privacidad.</span></h2>
+    </div>
+
+    <!-- ESCENA 3: EL CIERRE [0:10 - 0:15] -->
+    <div class="scene-3 absolute inset-0 p-8 flex flex-col justify-center items-center text-center bg-[#050505]">
+      <div class="w-16 h-16 rounded-full bg-[#00FF00]/20 flex items-center justify-center mb-4 text-2xl">
+        🚀
+      </div>
+      <h3 class="text-xs text-gray-400 uppercase tracking-widest mb-1">CyberEnterados presenta</h3>
+      <h1 class="text-xl font-extrabold text-[#00FF00] tracking-wider mb-4">www.libreqrstudios.com.ar</h1>
+      <p class="text-sm text-gray-300">Rápido. Elegante. Tuyo.</p>
+      <div class="mt-8 bg-[#00FF00] text-black font-bold px-6 py-2 rounded-full text-xs uppercase tracking-wider">
+        Enlace en la Bio 🔗
+      </div>
+    </div>
+
+    <!-- FOOTER TELEMETRÍA -->
+    <div class="border-t border-gray-800 pt-3 flex justify-between items-center text-[10px] text-gray-500">
+      <span>PERÍMETRO SEGURO</span>
+      <span>100% GRATIS</span>
+    </div>
+
+  </div>
+
+</body>
+</html>
