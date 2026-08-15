@@ -263,7 +263,6 @@
         <div class="flex gap-4 mt-2">
           <a href="https://x.com/libreqr" target="_blank" class="text-[#00FF00] text-xs hover:text-white hover:underline transition-colors">✖️ / 🐦 (X / Twitter)</a>
           <a href="https://www.linkedin.com/in/manuel-garcia-89392a427/" target="_blank" class="text-[#00FF00] text-xs hover:text-white hover:underline transition-colors">💼 / 🔗 (LinkedIn)</a>
-          <!-- <a href="https://www.instagram.com/libreqrstudios/" target="_blank" class="text-[#00FF00] text-xs hover:text-white hover:underline transition-colors">📸 / 📷 (Instagram)</a> -->
           <a href="https://www.facebook.com/profile.php?id=61592722612816&locale=es_LA" target="_blank" class="text-[#00FF00] text-xs hover:text-white hover:underline transition-colors">👥 / 📘 (Facebook)</a>
         </div>
         
@@ -329,15 +328,7 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="js/partnerRotator.js"></script>
-  <script src="js/ads/antiblock.js"></script>
-  <script src="js/ads/adManager.js"></script>
-  <script src="js/main.js"></script>
-  <!-- 🟢 NUEVO: MOTOR DE RASTREO CIVIL -->
-  <script src="js/telemetryEngine.js"></script>
-
-  <!-- 🚨 MODAL 4: SISTEMA ANTI-ADBLOCK -->
+  <!-- 🚨 MODAL 4: SISTEMA ANTI-ADBLOCK CON SALVOCONDUCTO VIP -->
   <div id="modal-antiblock" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col items-center justify-center p-4">
     <div class="bg-[#050505] border-2 border-red-600 p-6 md:p-8 w-[95%] max-w-lg mx-auto text-center shadow-[0_0_30px_rgba(255,0,0,0.4)] rounded relative overflow-x-hidden">
       <div class="inline-block bg-red-950 text-red-500 border border-red-600 text-[10px] px-3 py-1 font-mono uppercase tracking-widest rounded mb-4 animate-pulse">
@@ -347,20 +338,47 @@
       <p class="text-xs md:text-sm text-gray-300 font-mono mb-6 leading-relaxed">
         Detectamos un bloqueador de anuncios (<strong class="text-white">AdBlocker / Brave Shield</strong>) activo en su navegador.
       </p>
+      
       <div class="bg-[#0a0a0a] border border-red-900/50 p-4 rounded text-left font-mono text-xs text-gray-400 mb-6 space-y-2">
         <p class="text-[#00FF00] font-bold">>_ POR QUÉ OCURRE ESTO:</p>
-        <p>LibreQR Studios es 100% libre, sin registros ni venta de datos civiles. Nos financiamos exclusivamente mediante impresiones publicitarias pasivas.</p>
+        <p>LibreQR Studios es 100% libre. Nos financiamos exclusivamente mediante impresiones publicitarias pasivas.</p>
         <p class="text-red-400 font-bold mt-2">>_ PASOS PARA CONTINUAR:</p>
         <ol class="list-decimal list-inside space-y-1 text-gray-300">
           <li>Pause su bloqueador para <span class="text-white font-bold">https://www.libreqrstudios.com.ar/</span></li>
           <li>Presione el botón de reescaneo inferior.</li>
         </ol>
       </div>
-      <button id="btn-retry-antiblock" class="w-full border border-[#00FF00] bg-[#002200] text-[#00FF00] font-bold font-mono py-3 rounded hover:bg-[#00FF00] hover:text-black transition-all shadow-[0_0_15px_rgba(0,255,0,0.3)]">
+      
+      <button id="btn-retry-antiblock" class="w-full border border-[#00FF00] bg-[#002200] text-[#00FF00] font-bold font-mono py-3 mb-2 rounded hover:bg-[#00FF00] hover:text-black transition-all shadow-[0_0_15px_rgba(0,255,0,0.3)]">
         🔄 REINTENTAR ESCANEO DE BÚNKER
       </button>
+
+      <!-- ========================================== -->
+      <!-- 🎫 TERMINAL VIP: SALVOCONDUCTO 12HS        -->
+      <!-- ========================================== -->
+      <div class="mt-4 pt-4 border-t border-red-900/50 text-left">
+        <p class="text-[11px] text-[#00FF00] font-mono mb-2">>_ ¿APOYASTE EN KO-FI? CANJEA TU PASE DE 12HS:</p>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="email" id="input-vip-email" placeholder="EMAIL@DOMINIO.COM" 
+                 class="flex-1 bg-[#050505] border border-[#003300] text-[#00FF00] px-3 py-2 text-xs font-mono rounded outline-none focus:border-[#00FF00] transition-colors placeholder:text-gray-700">
+          <button id="btn-redeem-vip" class="border border-[#00FF00] bg-[#001100] text-[#00FF00] text-xs px-4 py-2 font-mono font-bold rounded hover:bg-[#00FF00] hover:text-black transition-all shadow-[0_0_10px_rgba(0,255,0,0.2)]">
+            DESBLOQUEAR 🔓
+          </button>
+        </div>
+        <p id="vip-status-msg" class="text-[10px] font-mono mt-2 hidden"></p>
+      </div>
+      
     </div>
   </div>
+
+  <!-- Scripts -->
+  <script src="js/partnerRotator.js"></script>
+  <script src="js/ads/antiblock.js"></script>
+  <script src="js/ads/adManager.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/telemetryEngine.js"></script>
+  <!-- 🟢 NUEVO: CONECTOR DEL SALVOCONDUCTO VIP -->
+  <script src="js/components/vipPass.js"></script>
 
 </body>
 </html>
