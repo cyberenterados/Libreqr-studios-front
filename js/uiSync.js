@@ -3,7 +3,7 @@
 // Motor de Rastreo Civil en Vivo (OP-#XXXX)
 // ==========================================
 const TelemetryEngine = (() => {
-  const API_URL = 'https://libreqr-studios-back.onrender.com/api/sync';
+  const API_URL = 'https://libreqr-studios-back.onrender.com/api/health';
   let currentOpId = null;
   let stepCounter = 1;
 

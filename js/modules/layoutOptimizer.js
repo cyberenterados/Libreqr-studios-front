@@ -1,11 +1,10 @@
-// ==========================================
-// 🛡️ MOTOR ANTI-ADBLOCKER (TÁCTICAS 1 + 2 + 3)
-// ==========================================
-
-const AntiBlockManager = {
-  
-  // 1. SONDA DE TRAMPA DOM (TÁCTICA 1)
-  checkDOMHoneypot() {
+/**
+ * ============================================================================
+ * 🛡️ ESCUDO DEFLECTOR (MODO EMBOSCADA TÁCTICA)
+ * ============================================================================
+ */
+const LayoutOptimizer = {
+  checkUIIntegrity() {
     return new Promise((resolve) => {
       const bait = document.createElement('div');
       bait.className = 'adsbox ad-zone ad-banner promo-banner GoogleAdSens';
@@ -26,56 +25,64 @@ const AntiBlockManager = {
     });
   },
 
-  // 2. SONDA DE RED FETCH (TÁCTICA 2)
-  async checkNetworkFetch() {
+  async verifyNetworkNodes() {
     try {
-      // Intentamos hacer un ping silencioso a un servidor conocido de anuncios
       await fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
         method: 'HEAD',
         mode: 'no-cors'
       });
-      return false; // Red limpia, no hay bloqueo
+      return false; 
     } catch (error) {
-      return true; // La petición falló porque el AdBlock cortó la conexión
+      return true; 
     }
   },
 
-  // 3. ESCANEO COMBINADO
-  async isAdBlockActive() {
+  async analyzeEnvironment() {
     const [domBlocked, networkBlocked] = await Promise.all([
-      this.checkDOMHoneypot(),
-      this.checkNetworkFetch()
+      this.checkUIIntegrity(),
+      this.verifyNetworkNodes()
     ]);
-
     return domBlocked || networkBlocked;
   },
 
-  // 4. DESPLIEGUE DEL MODAL DE ALERTA (TÁCTICA 3)
-  showWarningModal() {
+  showAlert() {
     const modal = document.getElementById('modal-antiblock');
     if (modal) {
       modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
   },
 
-  hideWarningModal() {
+  hideAlert() {
     const modal = document.getElementById('modal-antiblock');
     if (modal) {
       modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
   }
 };
 
-// Configurar botón de reintento
-document.addEventListener('DOMContentLoaded', () => {
+// ==========================================
+// 🚀 INICIO SILENCIOSO (SIN MODAL AUTOMÁTICO)
+// ==========================================
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Escaneo silencioso en segundo plano
+  window.isBunkerShieldActive = await LayoutOptimizer.analyzeEnvironment();
+  
+  if (window.isBunkerShieldActive) {
+    console.log("🟡 [RADAR] Enemigo detectado. Esperando a que el objetivo intente generar el QR para emboscar.");
+  }
+
+  // 2. Configurar botón de reintento del modal
   const btnRetry = document.getElementById('btn-retry-antiblock');
   if (btnRetry) {
     btnRetry.addEventListener('click', async () => {
       btnRetry.innerText = "⏳ REESCANANADO NODO...";
-      const blocked = await AntiBlockManager.isAdBlockActive();
+      const stillBlocked = await LayoutOptimizer.analyzeEnvironment();
       
-      if (!blocked) {
-        AntiBlockManager.hideWarningModal();
+      if (!stillBlocked) {
+        LayoutOptimizer.hideAlert();
+        window.isBunkerShieldActive = false;
         alert("🟢 ESCUDO DESACTIVADO: Acceso concedido al Búnker.");
       } else {
         alert("🔴 ALERTA: El bloqueador sigue activo. Por favor despliéguelo para continuar.");
@@ -84,4 +91,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-

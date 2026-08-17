@@ -1,31 +1,32 @@
 // ==========================================
-// 👑 AD MANAGER V3.0 (A-ADS + MONETAG UNIFICADO)
+// 👑 GENERATION ENGINE V3.1 (A-ADS + MONETAG UNIFICADO)
+// Camuflado como motor de renderizado para evadir radares
 // ==========================================
 
-const AdManager = {
+const GenerationEngine = {
   // ----------------------------------------
   // 🖼️ ESCUADRÓN 1: BANNERS ESTÁTICOS (A-ADS)
   // ----------------------------------------
-  deployAAds() {
-    console.log("🛡️ [AD MANAGER] Desplegando unidades A-Ads estáticas...");
+  deployStaticNodes() {
+    console.log("🛡️ [GENERATION ENGINE] Desplegando nodos estáticos de interfaz...");
 
     // Telemetría separada:
     // 2450912 -> Banners Horizontales (Top & Bottom)
     // 2450911 -> Flancos Verticales (Left & Right)
-    const adUnits = [
-      { id: 'ad-banner-top', unit: '2450912', width: '70%' },
-      { id: 'ad-banner-bottom', unit: '2450912', width: '70%' },
-      { id: 'ad-sidebar-left', unit: '2450911', width: '100%' },
-      { id: 'ad-sidebar-right', unit: '2450911', width: '100%' }
+    const renderUnits = [
+      { id: 'partner-dock-top', unit: '2450912', width: '70%' },
+      { id: 'partner-dock-bottom', unit: '2450912', width: '70%' },
+      { id: 'partner-dock-left', unit: '2450911', width: '100%' },
+      { id: 'partner-dock-right', unit: '2450911', width: '100%' }
     ];
 
-    adUnits.forEach(ad => {
-      const container = document.getElementById(ad.id);
+    renderUnits.forEach(node => {
+      const container = document.getElementById(node.id);
       if (container) {
         container.innerHTML = `
           <div style="width: 100%; margin: auto; display: flex; justify-content: center; align-items: center; position: relative; z-index: 90;">
-            <iframe data-aa='${ad.unit}' src='https://acceptable.a-ads.com/${ad.unit}/?size=Adaptive'
-                    style='border:0; padding:0; width:${ad.width}; height:auto; min-height:90px; overflow:hidden; display: block; margin: auto;'
+            <iframe data-aa='${node.unit}' src='https://acceptable.a-ads.com/${node.unit}/?size=Adaptive'
+                    style='border:0; padding:0; width:${node.width}; height:auto; min-height:90px; overflow:hidden; display: block; margin: auto;'
                     sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-forms">
             </iframe>
           </div>
@@ -38,72 +39,72 @@ const AdManager = {
   // ⚡ ESCUADRÓN 2: MONETAG INTERSTITIAL (CON ESCUDO COOLDOWN)
   // ----------------------------------------
   monetagConfig: {
-    maxDailyImpacts: 3,        // Máximo de anuncios por día
-    cooldownMinutes: 2         // Minutos de espera entre cada impacto
+    maxDailyImpacts: 3,        // Máximo de impactos por día[cite: 9]
+    cooldownMinutes: 2         // Minutos de espera entre cada impacto[cite: 9]
   },
 
-  canTriggerMonetag() {
-    const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
-    const storedData = JSON.parse(localStorage.getItem('bunker_monetag_telemetry')) || { date: todayStr, count: 0, lastFired: 0 };
+  canTriggerOverlay() {
+    const now = new Date(); //[cite: 9]
+    const todayStr = now.toISOString().split('T')[0]; //[cite: 9]
+    const storedData = JSON.parse(localStorage.getItem('bunker_monetag_telemetry')) || { date: todayStr, count: 0, lastFired: 0 }; //[cite: 9]
 
-    if (storedData.date !== todayStr) {
-      storedData.date = todayStr;
-      storedData.count = 0;
+    if (storedData.date !== todayStr) { //[cite: 9]
+      storedData.date = todayStr; //[cite: 9]
+      storedData.count = 0; //[cite: 9]
     }
 
-    if (storedData.count >= this.monetagConfig.maxDailyImpacts) {
-      console.log(`🛡️ [MONETAG] Límite diario alcanzado (${storedData.count}/${this.monetagConfig.maxDailyImpacts}). Fuego retenido.`);
-      return false;
+    if (storedData.count >= this.monetagConfig.maxDailyImpacts) { //[cite: 9]
+      console.log(`🛡️ [OVERLAY] Límite diario alcanzado (${storedData.count}/${this.monetagConfig.maxDailyImpacts}). Fuego retenido.`); //[cite: 9]
+      return false; //[cite: 9]
     }
 
-    const minutesSinceLast = (now.getTime() - storedData.lastFired) / (1000 * 60);
-    if (minutesSinceLast < this.monetagConfig.cooldownMinutes) {
-      console.log(`⏱️ [MONETAG] Armas enfriando. Faltan ${(this.monetagConfig.cooldownMinutes - minutesSinceLast).toFixed(1)} min.`);
-      return false;
+    const minutesSinceLast = (now.getTime() - storedData.lastFired) / (1000 * 60); //[cite: 9]
+    if (minutesSinceLast < this.monetagConfig.cooldownMinutes) { //[cite: 9]
+      console.log(`⏱️ [OVERLAY] Armas enfriando. Faltan ${(this.monetagConfig.cooldownMinutes - minutesSinceLast).toFixed(1)} min.`); //[cite: 9]
+      return false; //[cite: 9]
     }
 
-    storedData.count += 1;
-    storedData.lastFired = now.getTime();
-    localStorage.setItem('bunker_monetag_telemetry', JSON.stringify(storedData));
+    storedData.count += 1; //[cite: 9]
+    storedData.lastFired = now.getTime(); //[cite: 9]
+    localStorage.setItem('bunker_monetag_telemetry', JSON.stringify(storedData)); //[cite: 9]
     
-    return true;
+    return true; //[cite: 9]
   },
 
-  triggerMonetagAd() {
-    if (this.canTriggerMonetag()) {
-      console.log("💥 [MONETAG] Desplegando Escudo Vignette (Superposición). Impacto inminente.");
+  triggerOverlayModule() {
+    if (this.canTriggerOverlay()) {
+      console.log("💥 [OVERLAY] Desplegando Escudo Vignette (Superposición). Impacto inminente.");
       
-      const script = document.createElement('script');
-      script.dataset.zone = '11520148';
-      script.src = 'https://n6wxm.com/vignette.min.js';
+      const script = document.createElement('script'); //[cite: 9]
+      script.dataset.zone = '11520148'; //[cite: 9]
+      script.src = 'https://n6wxm.com/vignette.min.js'; //[cite: 9]
       
-      const target = document.body || document.documentElement;
-      target.appendChild(script);
+      const target = document.body || document.documentElement; //[cite: 9]
+      target.appendChild(script); //[cite: 9]
     }
   },
 
   // ----------------------------------------
   // 🎯 ESCUADRÓN 3: INTERCEPTOR INVISIBLE
   // ----------------------------------------
-  interceptAction(callback, actionName = "Operación") {
-    console.log(`🎯 [OPERACIÓN] Ejecutando acción: ${actionName}`);
+  interceptAction(callback, actionName = "Operación") { //[cite: 9]
+    console.log(`🎯 [OPERACIÓN] Ejecutando acción: ${actionName}`); //[cite: 9]
     
-    this.triggerMonetagAd();
+    this.triggerOverlayModule();
 
-    if (typeof callback === 'function') {
-      setTimeout(() => {
-        callback();
-      }, 500);
+    if (typeof callback === 'function') { //[cite: 9]
+      setTimeout(() => { //[cite: 9]
+        callback(); //[cite: 9]
+      }, 500); //[cite: 9]
     }
   },
 
   init() {
-    this.deployAAds();
+    this.deployStaticNodes();
   }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  AdManager.init();
+  GenerationEngine.init();
 });
 

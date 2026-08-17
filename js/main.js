@@ -122,6 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // === ZONA 2: PEAJE INICIAL (BOTÓN GENERAR) ===
   document.getElementById('btn-generate').addEventListener('click', async () => {
+    
+    // 🛡️ EMBOSCADA TÁCTICA: Revisar si hay un bloqueador antes de extraer los datos
+    if (window.isBunkerShieldActive) {
+      if (typeof VIPPassEngine !== 'undefined' && VIPPassEngine.hasAccess()) {
+        console.log("🟢 [SISTEMA] Bloqueador activo, pero el usuario tiene Pase VIP. Operación autorizada.");
+      } else {
+        console.warn("🚨 [ESCUDO] Intento de generación bloqueado. Activando campo de fuerza (Anti-AdBlock).");
+        if (typeof LayoutOptimizer !== 'undefined') {
+          LayoutOptimizer.showAlert();
+        }
+        return; // ⛔ Abortar la misión aquí. No se genera el QR.
+      }
+    }
+
     currentPayload = extractPayload();
     if (!currentPayload) return;
 
@@ -130,31 +144,20 @@ document.addEventListener('DOMContentLoaded', () => {
       TelemetryEngine.trackEvent('DISPARAR_GENERACION', { tipo: currentType });
     }
 
-    try {
-      if (typeof AntiBlockManager !== 'undefined') {
-        const isAdBlockerPresent = await AntiBlockManager.isAdBlockActive();
-        if (isAdBlockerPresent) {
-          AntiBlockManager.showWarningModal();
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn("⚠️ Radar Anti-AdBlock offline. Permitiendo paso...");
-    }
-
     console.log("🟢 Conexión limpia. Solicitando despliegue de QR...");
 
-    // 🛡️ NODO AD-MANAGER: INYECCIÓN DE INTERSTITIAL (Modal de 3 Segundos)
+    // 🛡️ NODO DE PATROCINADORES: INYECCIÓN DE INTERSTITIAL (Modal de 3 Segundos)
     const executeGeneration = () => {
       inputZone.classList.add('hidden');
       customZone.classList.remove('hidden');
       initLiveCanvas(currentPayload);
     };
 
-    if (typeof AdManager !== 'undefined') {
-      AdManager.interceptAction(executeGeneration, "Generación Inicial", 3);
+    // CAMBIO DE CIRUGÍA: Antes era AdManager, ahora es GenerationEngine
+    if (typeof GenerationEngine !== 'undefined') {
+      GenerationEngine.interceptAction(executeGeneration, "Generación Inicial");
     } else {
-      executeGeneration(); // Respaldo si falla el gestor de ads
+      executeGeneration(); // Respaldo si falla el gestor
     }
   });
 
@@ -177,13 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
 
-      // 🛡️ NODO AD-MANAGER (0 Segundos = Sin modal visual, solo evalúa disparo de interstitial)
-      if (typeof AdManager !== 'undefined') AdManager.interceptAction(applyColor, "Cambio de Color", 0);
+      // 🛡️ NODO PATROCINADORES (Antes AdManager, ahora GenerationEngine)
+      if (typeof GenerationEngine !== 'undefined') GenerationEngine.interceptAction(applyColor, "Cambio de Color");
       else applyColor();
     });
   });
 
-  // Color Picker Libre (Sin anuncios para no saturar al mover el selector libremente)
+  // Color Picker Libre (Sin anuncios para no saturar)
   document.getElementById('custom-color-picker').addEventListener('input', (e) => {
     colorChips.forEach(c => c.classList.remove('ring-2', 'ring-[#00FF00]'));
     if (qrEngine) qrEngine.update({ dotsOptions: { color: e.target.value } });
@@ -209,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
 
-      // 🛡️ NODO AD-MANAGER (0 Segundos)
-      if (typeof AdManager !== 'undefined') AdManager.interceptAction(applyShape, "Cambio de Forma", 0);
+      // 🛡️ NODO PATROCINADORES
+      if (typeof GenerationEngine !== 'undefined') GenerationEngine.interceptAction(applyShape, "Cambio de Forma");
       else applyShape();
     });
   });
@@ -257,6 +260,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function executeDownload(extension) {
     if (!qrEngine) return;
     
+    // 🛡️ VALIDACIÓN VIP FINAL: El token debe quemarse al descargar (Si existe la función burn)
+    if (typeof VIPPassEngine !== 'undefined' && VIPPassEngine.hasAccess() && typeof VIPPassEngine.burn === 'function') {
+      VIPPassEngine.burn();
+    }
+
     const size = parseInt(document.getElementById('download-resolution').value);
     
     const startDownload = () => {
@@ -284,9 +292,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
-    // 🛡️ NODO AD-MANAGER (3 Segundos con Modal Visual)
-    if (typeof AdManager !== 'undefined') {
-      AdManager.interceptAction(startDownload, "Descarga Final", 3);
+    // 🛡️ NODO PATROCINADORES
+    if (typeof GenerationEngine !== 'undefined') {
+      GenerationEngine.interceptAction(startDownload, "Descarga Final");
     } else {
       startDownload();
     }
